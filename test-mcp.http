@@ -1,0 +1,74 @@
+### 🔍 Health Check
+GET http://localhost:8787/health
+
+### 📜 Manifeste MCP
+GET http://localhost:8787/.well-known/mcp/manifest.json
+
+### 🔑 Auth — Obtenir un token API
+POST http://localhost:8787/mcp
+Content-Type: application/json
+
+{
+  "method": "tools/call",
+  "params": {
+    "name": "auth.get_token",
+    "arguments": {
+      "login": "demo@exemple.com",
+      "password": "motdepasse"
+    }
+  }
+}
+
+### 💾 Exporter les ventes du jour
+POST http://localhost:8787/mcp
+Content-Type: application/json
+
+{
+  "method": "tools/call",
+  "params": {
+    "name": "sales.export",
+    "arguments": {
+      "shopId": "12345",
+      "apiKey": "abcdef",
+      "formatExport": "Std"
+    }
+  }
+}
+
+### 🧾 Créer une vente simple
+POST http://localhost:8787/mcp
+Content-Type: application/json
+
+{
+  "method": "tools/call",
+  "params": {
+    "name": "sales.create",
+    "arguments": {
+      "shopId": "12345",
+      "apiKey": "abcdef",
+      "payment": -1,
+      "deliveryMethod": 4,
+      "items": [
+        { "type": "catalog", "productId": 1001, "quantity": 2 },
+        { "type": "dept", "departmentId": 1, "title": "Vente libre test", "price": 3.5 },
+        { "type": "free", "title": "Vente libre test 2", "price": 7.5 }
+      ]
+    }
+  }
+}
+
+### 👥 Liste des clients
+POST http://localhost:8787/mcp
+Content-Type: application/json
+
+{
+  "method": "tools/call",
+  "params": {
+    "name": "data.list_clients",
+    "arguments": {
+      "shopId": "12345",
+      "apiKey": "abcdef",
+      "format": "json"
+    }
+  }
+}

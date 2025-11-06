@@ -1,0 +1,66 @@
+{
+  "name": "caisse-enregistreuse-api",
+  "version": "1.0.0",
+  "description": "Expose les APIs de caisse.enregistreuse.fr comme outils MCP.",
+  "entry_points": {
+    "stdio": "build/stdio.js"
+  },
+  "tools": [
+    {
+      "name": "sales_create",
+      "description": "Créer une vente",
+      "input_schema": {
+        "type": "object",
+        "required": [  "items" ],
+        "properties": {
+          "payment": { "type": "number" },
+          "idUser": { "type": "number" },
+          "idtable": { "type": "number" },
+          "idcaisse": { "type": "number" },
+          "numcouverts": { "type": "number" },
+          "publicComment": { "type": "string" },
+          "privateComment": { "type": "string" },
+          "pagerNum": { "type": "number" },
+          "deliveryMethod": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 6
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": [ "catalog", "free", "dept" ]
+                },
+                "productId": { "type": "string" },
+                "quantity": { "type": "number" },
+                "title": { "type": "string" },
+                "price": { "type": "number" }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "sales_export",
+      "description": "Exporter les rapports de ventes (Std/PDF/XLS/CSV/frafec/saft)",
+      "input_schema": {
+        "type": "object",
+        "required": [  ],
+        "properties": {
+          "d": { "type": [ "integer", "string" ] },
+          "m": { "type": [ "integer", "string" ] },
+          "y": { "type": [ "integer", "string" ] },
+          "formatExport": {
+            "type": "string",
+            "enum": [ "Std", "PDF", "XLS", "CSV", "frafec", "saft" ]
+          }
+        }
+      }
+    }
+  ]
+}

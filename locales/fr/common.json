@@ -1,0 +1,91 @@
+{
+  "app": {
+    "name": "Serveur MCP P-Link.io",
+    "description": "Expose l’API P-Link.io sous forme d’outils MCP, permettant un accès programmatique à l’authentification, à la création de ventes et à la consultation des données du commerce."
+  },
+  "tools": {
+    "order_detail": {
+      "title": "Obtenir le détail d'une commande",
+      "description": "Récupère toutes les informations d’une commande à partir de son identifiant unique, y compris les articles vendus, le client, le mode de paiement et le montant total."
+    },
+    "context.set": {
+      "title": "Définir le contexte (API Key & Boutique)",
+      "description": "Enregistre vos identifiants APIKEY et SHOPID dans la session afin de pouvoir utiliser les autres outils sans avoir à répéter ces informations à chaque appel."
+    },
+    "ping": {
+      "title": "Ping",
+      "description": "Vérifie l’état du serveur MCP. Retourne { result: 'OK' } si le serveur est opérationnel."
+    },
+    "auth_get_token": {
+      "title": "Déconseillé. Obtenir APIKEY + SHOPID [deprecated]",
+      "description": "Les variables d'environnement SHOPID et APIKEY doivent être utilisées en stdio ou oAuth en http. Permet de récupérer les identifiants d’accès (APIKEY et SHOPID) à partir d’un couple login/mot de passe. Utilisé pour authentifier les appels aux autres outils du serveur."
+    },
+    "sale_create": {
+      "title": "Créer une vente",
+      "description": "Crée une nouvelle vente pour l'établissement. Prend en entrée le mode de paiement (optionnel) et la liste des articles. Chaque article peut être du type « catalogue » (avec productId) ou « rayon » (avec deptId) ou « libre » (avec titre et prix). Vérifier si le client n'existe déjà en utilisant data_list_clients et si le client existe, uniquement préciser idClient.  Retourne un objet JSON de confirmation de la vente tel que fourni par l’API distante."
+    },
+    "data_list_tables": {
+      "title": "Lister les tables",
+      "description": "Retourne la liste des tables configurées dans l’application, utilisée notamment pour le mode restauration ou la gestion des tables en salle."
+    },
+    "data_list_products": {
+      "title": "Lister les articles",
+      "description": "Récupère la liste complète des articles (produits) enregistrés dans la boutique. Retourne un tableau d’articles contenant les champs id, titre, prix, rayon, TVA, etc. Le paramètre optionnel 'format' permet de choisir la sortie (json, csv ou html)."
+    },
+    "data_list_departments": {
+      "title": "Lister les rayons",
+      "description": "Retourne la liste des rayons (catégories de produits) définis dans la boutique, avec leurs noms et taux de TVA associés. Compatible avec les formats json, csv ou html."
+    },
+    "data_list_department_groups": {
+      "title": "Lister les groupes de rayons",
+      "description": "Récupère la liste des groupes de rayons, utilisés pour organiser les catégories de produits. Chaque groupe peut regrouper plusieurs rayons."
+    },
+    "data_list_clients": {
+      "title": "Lister les clients",
+      "description": "Retourne la liste des clients enregistrés dans la boutique, incluant leurs informations de contact, points de fidélité..."
+    },
+    "data_list_variations": {
+      "title": "Lister les déclinaisons",
+      "description": "Liste toutes les déclinaisons d’articles (par exemple : taille, couleur, grammage). Retourne un tableau d’objets indiquant les valeurs et écarts de prix éventuels."
+    },
+    "data_list_delivery_men": {
+      "title": "Lister les méthodes de livraison",
+      "description": "Récupère la liste des modes de livraison disponibles dans la boutique : retrait en magasin, livraison à domicile, transporteur, etc.."
+    },
+    "data_list_payments": {
+      "title": "Lister les modes de paiement",
+      "description": "Retourne la liste des moyens de paiement configurés dans la boutique (espèces, carte bancaire, paiement mobile, etc.)."
+    },
+    "data_list_cashboxes": {
+      "title": "Lister les caisses",
+      "description": "Récupère la liste des caisses enregistrées (physiques ou virtuelles) associées à la boutique, avec leurs identifiants et leur état actuel."
+    },
+    "data_list_delivery_zones": {
+      "title": "Lister les zones de livraison",
+      "description": "Retourne toutes les zones de livraison configurées, incluant les noms de zone, codes postaux et éventuels frais de livraison associés."
+    },
+    "data_list_relay_points": {
+      "title": "Lister les points relais",
+      "description": "Liste les points relais disponibles pour la livraison des commandes, avec leur nom, adresse, ville et code postal."
+    },
+    "data_list_discounts": {
+      "title": "Lister les réductions",
+      "description": "Retourne l’ensemble des réductions ou suppléments disponibles dans la boutique, incluant leur nom, type (pourcentage ou fixe), valeur et conditions d’application."
+    },
+    "data_list_users": {
+      "title": "Lister les utilisateurs",
+      "description": "Récupère la liste des utilisateurs (vendeurs, gérants, etc.) rattachés à la boutique, avec leurs rôles et identifiants."
+    },
+    "data_list_orders": {
+      "title": "Lister les commandes",
+      "description": "Listez soit les commandes non validées (les devis) dont la date de création est comprise entre from_date_ISO8601 et to_date_ISO8601, soit les commandes validées (dénommées commandes ou factures) dont la date de valeur est comprise entre from_date_ISO8601 et to_date_ISO8601. Vous pouvez également filtrer les modes de livraison (avec filterDeliveryMethod)."
+    }
+  },
+  "messages": {
+    "server_started": "Serveur démarré et connecté avec succès",
+    "auth_ok": "Authentification réussie",
+    "auth_failed": "Échec de l’authentification",
+    "ctx_set": "Contexte enregistré",
+    "missing_params": "Paramètres manquants"
+  }
+}

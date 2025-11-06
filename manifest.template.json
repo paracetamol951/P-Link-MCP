@@ -1,0 +1,54 @@
+{
+  "name": "{{app.name}}",
+  "version": "1.2.0",
+  "description": "{{app.description}}",
+  "endpoints": [
+    {
+      "type": "http",
+      "url": "https://mcp.p-link.io/mcp",
+      "supports_streaming": true
+    }
+  ],
+  "auth": {
+    "type": "api_key",
+    "fields": {
+      "api_key": {
+        "name": "API key",
+        "in": "header",
+        "key": "Authorization",
+        "prefix": "Bearer "
+      }
+    }
+  },
+  "capabilities": {
+    "tools": true,
+    "resources": false,
+    "prompts": false
+  },
+  "tools": [
+    {
+      "name": "send_money",
+      "description": "Send money to an email, Solana wallet or phone number."
+    },
+    {
+      "name": "request_payment_link",
+      "description": "Create a payment link in order to request a payment"
+    },
+    {
+      "name": "get_my_wallet_info",
+      "description": "Retrieve the wallet infos about the connected P-Link account (Solana wallet address)"
+    },
+    {
+      "name": "get_transaction_state",
+      "description": "Retrieve the state and details of a transaction using Solana trx ID"
+    },
+    {
+      "name": "get_wallet_history",
+      "description": "Retrieve list of the transactions related to the specified Solana wallet address"
+    },
+    {
+      "name": "pay_and_get_402_protected_url",
+      "description": "Pay a HTTP 402 protected URL using your P-Link managed account, and gets the result"
+    }
+  ]
+}

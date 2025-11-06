@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "caisse": {
+      "command": "node",
+      "args": [
+        "D:\\Projets\\Crypto\\P-Link-MCP\\build\\stdio.js"
+      ],
+      "cwd": "D:\\Projets\\Crypto\\P-Link-MCP",
+      "env": {
+        "APIKEY": "hf82QLhsYPmz4wUnbQFb9f"
+      }
+    }
+  }
+}

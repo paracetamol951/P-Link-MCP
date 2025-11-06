@@ -1,0 +1,87 @@
+{
+  "app": {
+    "name": "P-Link.io MCP Server",
+    "description": "Exposes P-Link.io API as MCP tools, enabling programmatic access to authentication, sales creation, and data listing features for shops."
+  },
+  "tools": {
+    "auth_get_token": {
+      "title": "Not advised ! [Deprecated] Get API Key and Shop ID",
+      "description": "The SHOPID and APIKEY environment variables must be used in stdio or oAuth in http. Authenticate a user by login and password to obtain the APIKEY and SHOPID required for all other requests. Returns { result: 'OK', APIKEY, SHOPID } on success, or { result: 'ERROR', message } on failure."
+    },
+    "sale_create": {
+      "title": "Record a sale",
+      "description": "Record a new sale in the connected shop. Input includes paymentMode, and items[]. Each item can be of type 'catalog' (with productId), « department » (with deptId) or 'free' (with title and price). Check if the client already exists using data_list_clients and if the client exists, only specify idClient. If provided, paymentMode should correspond to a payment ID from data_list_payments tool. Returns a sale confirmation JSON from the API."
+    },
+    "data_list_products": {
+      "title": "List items",
+      "description": "Retrieve the list of articles (products) configured in the shop. Returns an array of products with fields like id, title, price, and departmentId. Optional parameter 'format' allows output as json, csv, or html."
+    },
+    "data_list_departments": {
+      "title": "List departments",
+      "description": "Get all departments (product categories) defined in the shop, including their names and default tax rates. Supports format=json|csv|html."
+    },
+    "data_list_department_groups": {
+      "title": "List department groups",
+      "description": "Return the list of department groups, used to organize product categories. Each group may include multiple department IDs."
+    },
+    "data_list_clients": {
+      "title": "List clients",
+      "description": "Get the list of clients registered in the shop, including contact info, loyalty points."
+    },
+    "data_list_variations": {
+      "title": "List item variants",
+      "description": "Retrieve product variations (declinaisons) such as size or color. Returns an array of variant definitions with value and optional price delta."
+    },
+    "data_list_delivery_men": {
+      "title": "List delivery methods",
+      "description": "List all delivery methods available for the shop, such as in-store pickup, home delivery, or courier services."
+    },
+    "data_list_payments": {
+      "title": "List payment modes",
+      "description": "Return the list of payment methods (e.g. cash, card, mobile payment) available for this shop."
+    },
+    "data_list_cashboxes": {
+      "title": "List cashboxes",
+      "description": "List the registered cashboxes (physical or virtual) linked to the shop, including their current status and identifiers."
+    },
+    "data_list_delivery_zones": {
+      "title": "List delivery zones",
+      "description": "Return all configured delivery zones, including area names, postal codes, and applicable delivery fees or restrictions."
+    },
+    "data_list_relay_points": {
+      "title": "List relay points",
+      "description": "List all relay points where customers can pick up their orders, including address, city, and postal code."
+    },
+    "data_list_discounts": {
+      "title": "List discounts",
+      "description": "Return all available discounts or promotions, including their names, types (percentage or fixed), values, and conditions."
+    },
+    "data_list_users": {
+      "title": "List users",
+      "description": "List all users (cashiers, managers, etc.) associated with the shop, including their roles and identifiers."
+    },
+    "data_list_tables": {
+      "title": "List tables",
+      "description": "Retrieve the list of tables configured in the app, used for restaurant mode or table management."
+    },
+    "data_list_orders": {
+      "title": "List orders",
+      "description": "List either : unvalidated orders (called quotes) with creation date between from_date_ISO8601 and to_date_ISO8601 OR validated orders (called orders, invoices) with date of value between from_date_ISO8601 and to_date_ISO8601. You can also filter delivery methods (using filterDeliveryMethod)"
+    },
+    "ping": {
+      "title": "Ping",
+      "description": "Simple MCP server health check. Returns { result: 'OK' } if the server is alive."
+    },
+    "order_detail": {
+      "title": "Get order detail",
+      "description": "Retrieve full order information by its unique ID, including items, client data, payment mode, and total amount."
+    }
+  },
+  "messages": {
+    "server_started": "Server started and connected successfully",
+    "auth_ok": "Authentication successful",
+    "auth_failed": "Authentication failed",
+    "ctx_set": "Context saved",
+    "missing_params": "Missing parameters"
+  }
+}

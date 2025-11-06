@@ -1,0 +1,5 @@
+{
+  "authorization_servers": ["https://mcp.enregistreuse.fr"],
+  "resource": "https://mcp.enregistreuse.fr",
+  "scopes_supported": ["mcp:invoke", "shop:read"]
+}
