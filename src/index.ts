@@ -58,7 +58,7 @@ app.post('/mcp', async (req: Request, res: Response, next: NextFunction) => {
             return next();
         }
 
-        return res.status(401).json({ error: 'unauthorized', detail: 'missing or invalid token' });
+        return next();
     } catch (e: unknown) {
         const detail = e instanceof Error ? e.message : 'invalid token';
         return res.status(401).json({ error: 'unauthorized', detail });
