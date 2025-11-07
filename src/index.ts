@@ -34,37 +34,35 @@ type BearerValidatorResult = { apiKey: string };
 
 // Middleware d'auth pour POST /mcp : on LAISSE PASSER la méthode "initialize" sans auth.
 // Pour toutes les autres méthodes (tools/resources/etc.), on exige Bearer OU x-api-key.
-app.post('/mcp', async (req: Request, res: Response, next: NextFunction) => {
+// (extrait)
+app.post('/mcp', async (req, res, next) => {
     try {
         const isInitialize = (req.body as any)?.method === 'initialize';
-        if (isInitialize) {
-            return next(); // 1re requête non authentifiée autorisée
-        }
+        if (isInitialize) return next();
 
-        // 1) Bearer (OAuth) si présent/valide
+        // 1) OAuth Bearer
         const authHeader = req.get('authorization') || '';
         try {
-            const { apiKey } = (await bearerValidator(authHeader)) as BearerValidatorResult;
+            const { apiKey } = await bearerValidator(authHeader);
             setSessionAuth({ ok: true, APIKEY: apiKey, scopes: ['mcp:invoke', 'shop:read'] });
             return next();
-        } catch {
-            // ignore, on tentera x-api-key ensuite
-        }
+        } catch { /* ignore */ }
 
-        // 2) Clé d'API (fallback) via en-têtes
+        // 2) Fallback X-API-KEY
         const apiKey = req.get('x-api-key') ?? req.get('x-apikey');
         if (apiKey) {
             setSessionAuth({ ok: true, APIKEY: apiKey, scopes: ['*'] });
             return next();
         }
 
-        return next();
-    } catch (e: unknown) {
+        return next();  // ← passe quand même (même sans auth)
+    } catch (e) {
         const detail = e instanceof Error ? e.message : 'invalid token';
         console.log(e);
-        return res.status(401).json({ error: 'unauthorized', detail });
+        return res.status(401).json({ error: 'unauthorized', detail }); // ← 401 ici
     }
 });
+
 
 // Optionnel : accepter une clé API même pour d'autres routes (GET/DELETE /mcp, etc.)
 // Cela met à jour le contexte si un token est présent, sans bloquer l'initialize.
