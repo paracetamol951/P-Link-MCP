@@ -13,7 +13,7 @@ const app = express();
 app.use(await oauthRouter()); // <-- monte /.well-known, /oauth/*
 
 // Middleware qui protège l’endpoint MCP par Bearer et initialise le "context" par requête
-app.post('/mcp', async (req, res, next) => {
+/*app.post('/mcp', async (req, res, next) => {
     try {
         const auth = req.get('authorization');
         const { apiKey } = await bearerValidator(auth);
@@ -23,7 +23,7 @@ app.post('/mcp', async (req, res, next) => {
     } catch (e: any) {
         return res.status(401).json({ error: 'unauthorized', detail: e?.message || 'invalid token' });
     }
-});
+});*/
 
 app.use(express.json());
 
