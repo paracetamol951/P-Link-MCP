@@ -130,7 +130,6 @@ Npm install configuration file `claude_desktop_config.json`
       ],
       "cwd": "{{PATH_TO_SRC}}",
       "env": {
-        "SHOPID": "16",
         "APIKEY": "XXXXXXXX"
       }
     }
