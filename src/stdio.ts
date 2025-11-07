@@ -11,7 +11,7 @@ import { registerPaymentsTools } from './tools/payments.js';
 import { register402client } from './tools/402client.js';
 
 // ==== Session globale (STDIO: une seule connexion) ====
-type AuthState = { ok: boolean; SHOPID?: string; APIKEY?: string; scopes?: string[] };
+type AuthState = { ok: boolean;  APIKEY?: string; scopes?: string[] };
 
 /** Vérifie qu'un objet est un ZodRawShape (Record<string, ZodTypeAny>) */
 function isZodRawShape(x: unknown): x is Record<string, ZodTypeAny> {
@@ -34,10 +34,9 @@ function ensureZodRawShape(
 }
 
 async function main() {
-    const envShop = process.env.SHOPID ?? process.env.MCP_SHOPID;
     const envKey = process.env.APIKEY ?? process.env.MCP_APIKEY;
-    if (!getSessionAuth() && envShop && envKey) {
-        setSessionAuth({ ok: true, SHOPID: envShop, APIKEY: envKey, scopes: ['*'] });
+    if (!getSessionAuth() && envKey) {
+        setSessionAuth({ ok: true,  APIKEY: envKey, scopes: ['*'] });
         process.stderr.write('[caisse][auth] Session initialisée depuis variables d’environnement.\n');
     }
     // --- Logs de contexte ---

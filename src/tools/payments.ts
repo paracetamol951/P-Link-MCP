@@ -22,7 +22,7 @@ export function registerPaymentsTools(server: McpServer | any) {
         },
         async ({ to, amount, currency, title }: InferFromShape<typeof getSendMoneyShape>, ctx: Ctx) => {
             const { apiKey } = resolveAuth(undefined, ctx);
-            //const data = await get('/workers/getOrder.php', { idboutique: shopId, key: apiKey, to });
+
             var jsP = {
                 myKey: apiKey,
                 to,

@@ -5,7 +5,6 @@
  */
 export type AuthState = {
     ok: boolean;
-    SHOPID?: string;
     APIKEY?: string;
     scopes?: string[];
 };
@@ -43,24 +42,19 @@ export type Ctx = {
 /**
  * Résolution unifiée des identifiants :
  * 1) session (ctx.auth puis SESSION)
- * 2) variables d'environnement (SHOPID/APIKEY ou MCP_SHOPID/MCP_APIKEY)
+ * 2) variables d'environnement (APIKEY ou MCP_SHOPID/MCP_APIKEY)
  *
  * Les tools n'ont plus besoin de recevoir apiKey en paramètres.
  * Lève une erreur explicite si les identifiants sont introuvables.
  */
-export function resolveAuth(
+export function resolveAuth(    
     _input?: unknown,
     ctx?: Ctx
-): { shopId: string; apiKey: string } {
+): {  apiKey: string } {
     // Priorité session: d'abord le ctx reçu par le handler (si ton serveur l'alimente),
     // puis le store global en mémoire.
     const sessionAuth = ctx?.auth ?? getSessionAuth();
 
-    const shopId =
-        sessionAuth?.SHOPID ??
-        process.env.SHOPID ??
-        process.env.MCP_SHOPID ??
-        '';
 
     const apiKey =
         sessionAuth?.APIKEY ??
@@ -70,11 +64,11 @@ export function resolveAuth(
 
     if ( !apiKey) {
         throw new Error(
-            'Identifiants manquants : SHOPID et/ou APIKEY introuvables (session/env). ' +
-            'Connectez-vous via auth.login, définissez SHOPID/APIKEY en variables d’environnement, ' +
+            'Identifiants manquants : APIKEY introuvables (session/env). ' +
+            'Connectez-vous via auth.login, définissez APIKEY en variables d’environnement, ' +
             'ou configurez les headers Authorization (Bearer) + X-Shop-Id côté client.'
         );
     }
 
-    return { shopId, apiKey };
+    return {  apiKey };
 }
