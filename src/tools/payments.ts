@@ -146,6 +146,13 @@ export function registerPaymentsTools(server: McpServer | any) {
             process.stderr.write(`[caisse][info] dat2 ${dat}\n`);
 
             var result = JSON.parse(dat);
+
+            if (result?.pubk) {
+                process.stderr.write(`[caisse][info] fetch wallet infos\n`);
+                const walletInfos = await fetch("https://p-link.io/api/walletInfos/" + result.pubk + '/1');
+                const walletBalance = await walletInfos.json();
+                result = { ...result, ...walletBalance };
+            }
             return structData(result);
         }
     );
