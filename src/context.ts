@@ -45,7 +45,7 @@ export type Ctx = {
  * 1) session (ctx.auth puis SESSION)
  * 2) variables d'environnement (SHOPID/APIKEY ou MCP_SHOPID/MCP_APIKEY)
  *
- * Les tools n'ont plus besoin de recevoir shopId/apiKey en paramètres.
+ * Les tools n'ont plus besoin de recevoir apiKey en paramètres.
  * Lève une erreur explicite si les identifiants sont introuvables.
  */
 export function resolveAuth(

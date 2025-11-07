@@ -9,7 +9,6 @@ export type PendingCode = {
     code_challenge: string;
     login: string;
     apiKey: string;
-    shopId: string;
     scope: string;
     exp: number; // epoch seconds
 };

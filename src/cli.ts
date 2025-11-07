@@ -42,14 +42,11 @@ function loadDotenv(filePath?: string) {
     const envFile = getEnvFile();
 
     // variables explicites
-    const shopId = getKV("shopid") || process.env.SHOPID;
     const apiKey = getKV("apikey") || process.env.APIKEY;
 
     // on charge un éventuel .env ensuite pour ne pas écraser les flags
     loadDotenv(envFile);
 
-    // on réinjecte les flags dans l'environnement
-    if (shopId) process.env.SHOPID = shopId;
     if (apiKey) process.env.APIKEY = apiKey;
     process.env.MCP_LANG = lang;
 

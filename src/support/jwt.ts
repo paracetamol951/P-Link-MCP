@@ -5,7 +5,6 @@ const secret = new TextEncoder().encode(process.env.MCP_JWT_SECRET || 'change-me
 
 export type McpClaims = {
   sub: string;          // user id or email
-  shopId?: string;
   scope?: string[];     // e.g., ['sales:read','sales:write']
 };
 

@@ -16,9 +16,9 @@ import { fileURLToPath } from 'url';
 
 
 // ---------- CONFIG ----------
-const ISSUER = process.env.MCP_OAUTH_ISSUER || 'https://mcp.kash.click';
-const AUD = process.env.MCP_OAUTH_AUDIENCE || 'https://mcp.kash.click';
-const AUTH_WS = process.env.MCP_AUTH_WS_BASE || 'https://caisse.enregistreuse.fr'; // base pour getAuthToken.php
+const ISSUER = process.env.MCP_OAUTH_ISSUER || 'https://mcp.p-link.io';
+const AUD = process.env.MCP_OAUTH_AUDIENCE || 'https://mcp.p-link.io';
+const AUTH_WS = process.env.MCP_AUTH_WS_BASE || 'https://p-link.io'; // base pour getAuthToken.php
 
 // Clés pour RS256 (publiques via JWKS)
 
@@ -153,7 +153,6 @@ function sha256(input: string) {
     code_challenge: string;    // PKCE (S256)
     login: string;
     apiKey: string;
-    shopId: string;
     scope: string;
     exp: number;
 };
@@ -399,14 +398,10 @@ export default async function oauthRouter() {
         <input type="hidden" name="state" value="${state}"/>
         <input type="hidden" name="code_challenge" value="${code_challenge}"/>
         <input type="hidden" name="scope" value="${scope}"/>
-          <div class="field">
-            <input class="input" id="login" name="login" type="text" placeholder=" " autocomplete="username" required />
-            <label class="floating-label" for="login">Login</label>
-          </div>
 
           <div class="field">
             <input class="input" id="password" name="password" type="password" placeholder=" " autocomplete="current-password" required />
-            <label class="floating-label" for="password">Password</label>
+            <label class="floating-label" for="password">API Key</label>
             <button class="password-toggle" type="button" aria-label="Show / Hide password" onclick="togglePassword()">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M12 5c-5 0-9 4-10 7 1 3 5 7 10 7s9-4 10-7c-1-3-5-7-10-7zm0 12a5 5 0 110-10 5 5 0 010 10z" fill="currentColor"/>
@@ -416,9 +411,9 @@ export default async function oauthRouter() {
 
 
           <button class="btn" type="submit">Connect</button>
-          <a class="btn btn-secondary" target="_blank" href="https://www.free-cash-register.net" >Create account</a>
+          <a class="btn btn-secondary" target="_blank" href="https://p-link.io" >Create account</a>
         </form>
-        <footer>© <span id="year"></span> <a href="https://www.free-cash-register.net">free-cash-register.net</a></footer>
+        <footer>© <span id="year"></span> <a href="https://p-link.io">p-link.io</a></footer>
       </div>
     </section>
   </main>
@@ -449,27 +444,40 @@ export default async function oauthRouter() {
             }
             if (!code_challenge) return res.status(400).send('missing PKCE code_challenge');
 
-            // Appel serveur→serveur vers getAuthToken.php (doit renvoyer { APIKEY, SHOPID })
-            const out = await postForm('/workers/getAuthToken.php', { login, password });
+            var jsP = {
+                myKey: password
+            }
+            const fet = await fetch(process.env.API_BASE + '/api/getAPIUser', {
+                method: 'POST',
+                headers: {
+                    Accept: 'application.json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(jsP)
+            });
+            var dat = await fet.text();
+            process.stderr.write(`[caisse][info] dat2 ${dat}\n`);
 
-            //const out = await postForm(new URL('/workers/getAuthToken.php', AUTH_WS).pathname, { login, password });
-            if (!out || typeof out !== 'object' || !('APIKEY' in out) || !('SHOPID' in out)) {
+            var result = JSON.parse(dat);
+
+            if (result.myKey) {
+                const APIKEY = result.myKey;
+                const code = crypto.randomBytes(24).toString('base64url');
+                const exp = Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30 * 12;
+                await saveCode(code, {
+                    client_id, redirect_uri, code_challenge, login,
+                    apiKey: APIKEY,  scope, exp,
+                }, 300);
+
+
+                const u = new URL(redirect_uri);
+                u.searchParams.set('code', code);
+                if (state) u.searchParams.set('state', state);
+                return res.redirect(u.toString());
+            } else {
                 return res.status(401).send('Bad credentials');
             }
-            const { APIKEY, SHOPID } = out as any;
 
-            const code = crypto.randomBytes(24).toString('base64url');
-            const exp = Math.floor(Date.now() / 1000) + 60*60*24*30*12;
-            await saveCode(code, {
-                client_id, redirect_uri, code_challenge, login,
-                apiKey: APIKEY, shopId: SHOPID, scope, exp,
-            }, 300);
-
-
-            const u = new URL(redirect_uri);
-            u.searchParams.set('code', code);
-            if (state) u.searchParams.set('state', state);
-            return res.redirect(u.toString());
         } catch (e) {
             return res.status(500).send('authorize_error');
         }
@@ -516,7 +524,6 @@ export default async function oauthRouter() {
             const now = Math.floor(Date.now() / 1000);
             const jwt = await new SignJWT({
                 sub: rec.login,
-                shop: { id: rec.shopId },
                 api: { key: rec.apiKey },
                 scope: rec.scope,
                 aud: AUD,
@@ -527,7 +534,7 @@ export default async function oauthRouter() {
                 .setExpirationTime(now + 60*60*24*30*10)
                 .sign(privateKey!);
 
-            logInfo(`token: success for sub=${rec.login} shop=${rec.shopId} in ${Date.now() - started}ms`);
+            logInfo(`token: success for sub=${rec.login}  in ${Date.now() - started}ms`);
             return res.json({
                 access_token: jwt,
                 token_type: 'Bearer',
@@ -555,6 +562,5 @@ export async function bearerValidator(authorization?: string) {
     const scopes = String(payload.scope || '').split(/\s+/).filter(Boolean);
     if (!scopes.includes('mcp:invoke')) throw new Error('Insufficient scope');
     const apiKey = (payload as any)?.api?.key;
-    const shopId = (payload as any)?.shop?.id;
-    return { apiKey, shopId, sub: payload.sub };
+    return { apiKey,  sub: payload.sub };
 }

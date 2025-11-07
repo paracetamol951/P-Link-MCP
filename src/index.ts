@@ -16,9 +16,9 @@ app.use(await oauthRouter()); // <-- monte /.well-known, /oauth/*
 app.post('/mcp', async (req, res, next) => {
     try {
         const auth = req.get('authorization');
-        const { apiKey, shopId } = await bearerValidator(auth);
+        const { apiKey } = await bearerValidator(auth);
         // Rendez ces infos dispos aux tools via le "session context" existant
-        setSessionAuth({ ok: true, APIKEY: apiKey, SHOPID: shopId, scopes: ['mcp:invoke', 'shop:read'] });
+        setSessionAuth({ ok: true, APIKEY: apiKey,  scopes: ['mcp:invoke', 'shop:read'] });
         next();
     } catch (e: any) {
         return res.status(401).json({ error: 'unauthorized', detail: e?.message || 'invalid token' });
@@ -31,9 +31,8 @@ app.use((req, _res, next) => {
     const auth = req.get('authorization') || '';
     const m = /^Bearer\s+(.+)$/i.exec(auth);
     const apiKey = m?.[1] ?? req.get('x-api-key') ?? req.get('x-apikey') ?? '';
-    const shopId = req.get('x-shop-id') ?? req.get('x-shopid') ?? '';
-    if (apiKey && shopId) {
-        setSessionAuth({ ok: true, SHOPID: shopId, APIKEY: apiKey, scopes: ['*'] });
+    if (apiKey ) {
+        setSessionAuth({ ok: true,  APIKEY: apiKey, scopes: ['*'] });
         process.stderr.write('[mcp][auth] Session mise à jour depuis headers HTTP.\n');
     }
     next();
