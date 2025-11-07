@@ -6,8 +6,6 @@ import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
 import { z, ZodTypeAny } from 'zod';
 
 // ⬇️ IMPORTANT : garde bien les suffixes ".js" car le build ESM référencera build/*.js
-import { registerSalesTools } from './tools/sales.js';
-import { registerDataTools } from './tools/data.js';
 import { setSessionAuth, getSessionAuth } from './context.js';
 import { registerPaymentsTools } from './tools/payments.js';
 import { register402client } from './tools/402client.js';

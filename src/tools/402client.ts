@@ -26,7 +26,7 @@ export function register402client(server: McpServer | any) {
         {
             title: "Pay a HTTP 402 protected URL",
             description: "Pay a HTTP 402 protected URL using your P-Link managed account, and gets the result",
-            inputSchema: get402clientShape, // ZodRawShape,
+            inputSchema: get402clientShape, 
             annotations: { readOnlyHint: true }
         },
         async ({ url }: InferFromShape<typeof get402clientShape>, ctx: Ctx) => {
@@ -34,7 +34,7 @@ export function register402client(server: McpServer | any) {
             var jsP = {
                 myKey: apiKey
             }
-            const fet = await fetch('http://localhost:3000/api/getAPIUser', {
+            const fet = await fetch(process.env.API_BASE +'/api/getAPIUser', {
                 method: 'POST',
                 headers: {
                     Accept: 'application.json',
@@ -44,7 +44,7 @@ export function register402client(server: McpServer | any) {
             });
             var dat = await fet.text();
             process.stderr.write(`[caisse][info] dat2 ${dat}\n`);
-            //console.log(dat);
+
             var result = JSON.parse(dat);
             if (result.error) {
                 return structData(result);
@@ -55,8 +55,9 @@ export function register402client(server: McpServer | any) {
 
             const pk = result.pk;
             process.stderr.write(`[caisse][info] ok data ++++\n`);
-            //if (url)
+
             const paidResult = await callPaid(url, pk);
+
             return structData(paidResult);
         }
     );

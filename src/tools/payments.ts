@@ -1,7 +1,5 @@
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z, ZodTypeAny } from 'zod';
-import { get } from '../support/http.js';
-import { t } from '../i18n/index.js';
 import { type Ctx, resolveAuth } from '../context.js';
 import { currencyZOD, InferFromShape, structData } from '../support/toolsData.js';
 
@@ -32,7 +30,7 @@ export function registerPaymentsTools(server: McpServer | any) {
                 currencyUsed: currency,
                 title
             }
-            const fet = await fetch('https://p-link.io/api/tr4usr', {
+            const fet = await fetch(process.env.API_BASE +'/api/tr4usr', {
                 method: 'POST',
                 headers: {
                     Accept: 'application.json',
@@ -82,7 +80,7 @@ export function registerPaymentsTools(server: McpServer | any) {
                 var jsP = {
                     myKey: apiKey
                 }
-                const fet = await fetch('http://localhost:3000/api/getAPIUser', {
+                const fet = await fetch(process.env.API_BASE +'/api/getAPIUser', {
                     method: 'POST',
                     headers: {
                         Accept: 'application.json',
@@ -92,26 +90,23 @@ export function registerPaymentsTools(server: McpServer | any) {
                 });
                 var dat = await fet.text();
                 process.stderr.write(`[caisse][info] dat2 ${dat}\n`);
-                //console.log(dat);
+
                 var result = JSON.parse(dat);
                 if (result.pubk) reqBody.receivingPayment = result.pubk;
 
                 if (result.error) {
                     return structData(result);
                 }
-                //http://localhost:3000/api/getAPIUser/mHIt9QDOqVA6IZp9mD34fh
             }
             if (!reqBody.receivingPayment) {
                 return structData({
                     error:'receivingPayment parameter required'});
             }
-            var req = await fetch('http://localhost:3000/api/createPLink', {
-                //var req = await fetch('https://p-link.io/api/createPLink', {
+            var req = await fetch(process.env.API_BASE +'/api/createPLink', {
                 method: 'POST',
                 body: JSON.stringify(reqBody)
             });
             var plink_Info = await req.json();
-            //console.log('plink_Info', plink_Info); 
 
 
             return structData(plink_Info);
@@ -123,8 +118,8 @@ export function registerPaymentsTools(server: McpServer | any) {
     server.registerTool(
         'get_my_wallet_info',
         {
-            title: "Wallet infos",
-            description: "Retrieve the wallet infos about the connected P-Link account (Solana wallet address)",
+            title: "Wallet infos and balance",
+            description: "Retrieve the wallet infos about the connected P-Link account (Solana wallet address, wallet balance)",
             inputSchema: getGetUserShape, // ZodRawShape,
             //annotations: { readOnlyHint: true }
         },
@@ -134,7 +129,7 @@ export function registerPaymentsTools(server: McpServer | any) {
             var jsP = {
                 myKey: apiKey
             }
-            const fet = await fetch('http://localhost:3000/api/getAPIUser', {
+            const fet = await fetch(process.env.API_BASE +'/api/getAPIUser', {
                 method: 'POST',
                 headers: {
                     Accept: 'application.json',
@@ -149,7 +144,7 @@ export function registerPaymentsTools(server: McpServer | any) {
 
             if (result?.pubk) {
                 process.stderr.write(`[caisse][info] fetch wallet infos\n`);
-                const walletInfos = await fetch("https://p-link.io/api/walletInfos/" + result.pubk + '/1');
+                const walletInfos = await fetch(process.env.API_BASE +'/api/walletInfos/' + result.pubk + '/1');
                 const walletBalance = await walletInfos.json();
                 result = { ...result, ...walletBalance };
             }
@@ -171,7 +166,7 @@ export function registerPaymentsTools(server: McpServer | any) {
         },
         async ({ trxID }: InferFromShape<typeof getGetTrxStateShape>, ctx: Ctx) => {
 
-            const fet = await fetch('http://localhost:3000/api/trxState/'+trxID+'/'+new Date().getTime() );
+            const fet = await fetch(process.env.API_BASE +'/api/trxState/'+trxID+'/'+new Date().getTime() );
             var dat = await fet.text();
             process.stderr.write(`[caisse][info] dat2 ${dat}\n`);
 
@@ -193,7 +188,7 @@ export function registerPaymentsTools(server: McpServer | any) {
         },
         async ({ walletAddress }: InferFromShape<typeof getWalletHistoryShape>, ctx: Ctx) => {
 
-            const fet = await fetch('http://localhost:3000/api/walletHistory/' + walletAddress +'/'+new Date().getTime() );
+            const fet = await fetch(process.env.API_BASE +'/api/walletHistory/' + walletAddress +'/'+new Date().getTime() );
             var dat = await fet.text();
             process.stderr.write(`[caisse][info] dat2 ${dat}\n`);
 
@@ -202,90 +197,3 @@ export function registerPaymentsTools(server: McpServer | any) {
         }
     );
 }
-/*
-export function createPaymentsTools(): ToolDefinition[] {
-    return [
-        // send_money
-        {
-            name: "send_money",
-            description: "Send money to an email or phone number.",
-            inputSchema: z.object({
-                to: z.string().describe("Email or phone (E.164)"),
-                amount: z.number().positive(),
-                currency: z.string().default("USDC"),
-                memo: z.string().optional()
-            }),
-            async handler({ input }) {
-                const { to, amount, currency, memo } = input as z.infer<this["inputSchema"]>;
-                const res = await coreSendMoney({ to, amount, currency, memo });
-                return { content: [{ type: "text", text: JSON.stringify(res) }] };
-            }
-        },
-
-        // request_money
-        {
-            name: "request_money",
-            description: "Create a payment link (P-Link) to request money.",
-            inputSchema: z.object({
-                from: z.string().optional().describe("Optional suggested payer"),
-                amount: z.number().positive(),
-                currency: z.string().default("USDC"),
-                note: z.string().optional()
-            }),
-            async handler({ input }) {
-                const { from, amount, currency, note } = input as z.infer<this["inputSchema"]>;
-                const res = await coreRequestLink({ from, amount, currency, note });
-                return { content: [{ type: "text", text: JSON.stringify(res) }] };
-            }
-        },
-
-        // send_money_request
-        {
-            name: "send_money_request",
-            description: "Send an email containing a P-Link payment request.",
-            inputSchema: z.object({
-                to: z.string(),
-                plink: z.string().url(),
-                subject: z.string().default("Payment request"),
-                message: z.string().default("Please complete your payment using the link below.")
-            }),
-            async handler({ input }) {
-                const { to, plink, subject, message } = input as z.infer<this["inputSchema"]>;
-                const res = await sendPaymentEmail({ to, plink, subject, message });
-                return { content: [{ type: "text", text: JSON.stringify(res) }] };
-            }
-        },
-
-        // payment_history
-        {
-            name: "payment_history",
-            description: "Retrieve recent wallet payment history.",
-            inputSchema: z.object({
-                limit: z.number().int().min(1).max(100).default(20),
-                cursor: z.string().optional()
-            }),
-            async handler({ input }) {
-                const { limit, cursor } = input as z.infer<this["inputSchema"]>;
-                const res = await corePaymentHistory({ limit, cursor });
-                return { content: [{ type: "text", text: JSON.stringify(res) }] };
-            }
-        },
-
-        // pay_link (HTTP 402 client)
-        {
-            name: "pay_link",
-            description: "Pay an HTTP 402-protected resource and return its content.",
-            inputSchema: z.object({
-                url: z.string().url(),
-                maxAmount: z.number().positive().default(5),
-                currency: z.string().default("USDC")
-            }),
-            async handler({ input }) {
-                const { url, maxAmount, currency } = input as z.infer<this["inputSchema"]>;
-                const res = await corePay402({ url, maxAmount, currency });
-                return { content: [{ type: "text", text: JSON.stringify(res) }] };
-            }
-        }
-    ];
-}
-*/

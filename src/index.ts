@@ -3,8 +3,6 @@ import express from 'express';
 import { randomUUID } from 'node:crypto';
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
-import { registerSalesTools } from './tools/sales.js';
-import { registerDataTools } from './tools/data.js';
 import { setSessionAuth } from './context.js';
 import oauthRouter, { bearerValidator } from './support/oauth.js';
 import { registerPaymentsTools } from './tools/payments.js';

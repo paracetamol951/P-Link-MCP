@@ -32,11 +32,11 @@
     },
     {
       "name": "request_payment_link",
-      "description": "Create a payment link in order to request a payment"
+      "description": "Create a payment link in order to request a payment to your account"
     },
     {
       "name": "get_my_wallet_info",
-      "description": "Retrieve the wallet infos about the connected P-Link account (Solana wallet address)"
+      "description": "Retrieve the wallet infos about the connected P-Link account (Solana wallet address, Balance)"
     },
     {
       "name": "get_transaction_state",
@@ -44,11 +44,11 @@
     },
     {
       "name": "get_wallet_history",
-      "description": "Retrieve list of the transactions related to the specified Solana wallet address"
+      "description": "Retrieve list of the transactions related to my Solana wallet"
     },
     {
       "name": "pay_and_get_402_protected_url",
-      "description": "Pay a HTTP 402 protected URL using your P-Link managed account, and gets the result"
+      "description": "Pay a HTTP 402 protected URL using your P-Link managed account, and returns the result"
     }
   ]
 }
