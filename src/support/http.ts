@@ -1,6 +1,6 @@
 import { fetch, type RequestInit } from 'undici';
 
-export const BASE = process.env.API_BASE || 'https://caisse.enregistreuse.fr';
+export const BASE = process.env.API_BASE || 'https://p-link.io';
 // en tête du fichier
 export type Formish = Record<
     string,

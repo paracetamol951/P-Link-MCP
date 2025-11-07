@@ -37,6 +37,7 @@ type BearerValidatorResult = { apiKey: string };
 // (extrait)
 app.post('/mcp', async (req, res, next) => {
     try {
+        console.log('isInitialize');
         const isInitialize = (req.body as any)?.method === 'initialize';
         if (isInitialize) return next();
 

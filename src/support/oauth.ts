@@ -475,6 +475,7 @@ export default async function oauthRouter() {
                 if (state) u.searchParams.set('state', state);
                 return res.redirect(u.toString());
             } else {
+                console.log('bad credd');
                 return res.status(401).send('Bad credentials');
             }
 

@@ -16,7 +16,7 @@
     "prepublishOnly": "npm run build"
   },
   "bin": {
-    "caisse-mcp": "./build/cli.js"
+    "plink-mcp": "./build/cli.js"
   },
   "files": [
     "build",

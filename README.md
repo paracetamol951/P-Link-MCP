@@ -84,10 +84,10 @@ Provide the following content after replacing your SHOPID and APIKEY.
 ```json
   {
   "mcpServers": {
-    "caisse": {
+    "plink": {
       "command": "npx",
       "args": [
-        "p-link-mcp",
+        "plink-mcp",
         "--apikey=[replaceWithYourAPIKEY]"
       ]
     }
@@ -123,7 +123,7 @@ Npm install configuration file `claude_desktop_config.json`
 ```json
 {
   "mcpServers": {
-    "caisse": {
+    "plink": {
       "command": "node",
       "args": [
         "{{PATH_TO_SRC}}/build/stdio.js"
