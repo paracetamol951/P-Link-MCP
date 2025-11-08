@@ -464,6 +464,7 @@ export default async function oauthRouter() {
                 const APIKEY = password;
                 const code = crypto.randomBytes(24).toString('base64url');
                 const exp = Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30 * 12;
+                console.log('save API KEY', APIKEY);
                 await saveCode(code, {
                     client_id, redirect_uri, code_challenge, login,
                     apiKey: APIKEY,  scope, exp,
