@@ -73,7 +73,7 @@ app.use((req: Request, _res: Response, next: NextFunction) => {
     const apiKey = m?.[1] ?? req.get('x-api-key') ?? req.get('x-apikey') ?? '';
     if (apiKey) {
         setSessionAuth({ ok: true, APIKEY: apiKey, scopes: ['*'] });
-        process.stderr.write('[mcp][auth] Session mise à jour depuis headers HTTP apiKey ${apiKey}.\n');
+        process.stderr.write('[mcp][auth] Session mise à jour depuis headers HTTP apiKey apiKey ' + apiKey);
     }
     next();
 });

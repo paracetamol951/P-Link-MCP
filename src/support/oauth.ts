@@ -564,5 +564,6 @@ export async function bearerValidator(authorization?: string) {
     const scopes = String(payload.scope || '').split(/\s+/).filter(Boolean);
     if (!scopes.includes('mcp:invoke')) throw new Error('Insufficient scope');
     const apiKey = (payload as any)?.api?.key;
+    process.stderr.write('[mcp][auth] bearerValidator apiKey ' + apiKey);
     return { apiKey,  sub: payload.sub };
 }
