@@ -35,7 +35,7 @@ type BearerValidatorResult = { apiKey: string };
 // Middleware d'auth pour POST /mcp : on LAISSE PASSER la méthode "initialize" sans auth.
 // Pour toutes les autres méthodes (tools/resources/etc.), on exige Bearer OU x-api-key.
 // (extrait)
-app.post('/mcp', async (req, res, next) => {
+/*app.post('/mcp', async (req, res, next) => {
     try {
         console.log('isInitialize');
         const isInitialize = (req.body as any)?.method === 'initialize';
@@ -47,7 +47,7 @@ app.post('/mcp', async (req, res, next) => {
             const { apiKey } = await bearerValidator(authHeader);
             setSessionAuth({ ok: true, APIKEY: apiKey, scopes: ['mcp:invoke', 'shop:read'] });
             return next();
-        } catch { /* ignore */ }
+        } catch {  }
 
         // 2) Fallback X-API-KEY
         const apiKey = req.get('x-api-key') ?? req.get('x-apikey');
@@ -62,7 +62,7 @@ app.post('/mcp', async (req, res, next) => {
         console.log(e);
         return res.status(401).json({ error: 'unauthorized', detail }); // ← 401 ici
     }
-});
+});*/
 
 
 // Optionnel : accepter une clé API même pour d'autres routes (GET/DELETE /mcp, etc.)
@@ -73,7 +73,7 @@ app.use((req: Request, _res: Response, next: NextFunction) => {
     const apiKey = m?.[1] ?? req.get('x-api-key') ?? req.get('x-apikey') ?? '';
     if (apiKey) {
         setSessionAuth({ ok: true, APIKEY: apiKey, scopes: ['*'] });
-        process.stderr.write('[mcp][auth] Session mise à jour depuis headers HTTP.\n');
+        process.stderr.write('[mcp][auth] Session mise à jour depuis headers HTTP apiKey ${apiKey}.\n');
     }
     next();
 });
