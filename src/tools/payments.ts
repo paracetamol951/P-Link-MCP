@@ -129,7 +129,7 @@ export function registerPaymentsTools(server: McpServer | any) {
             var jsP = {
                 myKey: apiKey
             }
-            process.stderr.write(`[caisse][info] apiKey ${apiKey}\n`);
+            process.stderr.write(`[caisse][info] XapiKey ${apiKey}\n`);
             const fet = await fetch(process.env.API_BASE +'/api/getAPIUser', {
                 method: 'POST',
                 headers: {
