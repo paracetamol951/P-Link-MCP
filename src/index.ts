@@ -64,19 +64,36 @@ type BearerValidatorResult = { apiKey: string };
     }
 });*/
 
+app.post('/mcp', async (req, res, next) => {
+    try {
+        // 0) initialize passe sans auth
+        if (req.body?.method === 'initialize') return next();
 
-// Optionnel : accepter une clé API même pour d'autres routes (GET/DELETE /mcp, etc.)
-// Cela met à jour le contexte si un token est présent, sans bloquer l'initialize.
-app.use((req: Request, _res: Response, next: NextFunction) => {
-    const auth = req.get('authorization') || '';
-    const m = /^Bearer\s+(.+)$/i.exec(auth);
-    const apiKey = m?.[1] ?? req.get('x-api-key') ?? req.get('x-apikey') ?? '';
-    if (apiKey) {
-        setSessionAuth({ ok: true, APIKEY: apiKey, scopes: ['*'] });
-        process.stderr.write('[mcp][auth] Session mise à jour depuis headers HTTP apiKey apiKey ' + apiKey);
+        // 1) Bearer OAuth prioritaire
+        const auth = req.get('authorization') ?? req.get('Authorization');
+        if (auth?.startsWith('Bearer ')) {
+            const { apiKey } = await bearerValidator(auth); // RS256 + iss/aud/exp
+            setSessionAuth({
+                ok: true,
+                APIKEY: apiKey,  
+                scopes: ['mcp:invoke'],
+            });
+            return next();
+        }
+
+        // 2) Fallback optionnel x-api-key
+        const xKey = req.get('x-api-key') ?? req.get('x-apikey');
+        if (xKey) {
+            setSessionAuth({ ok: true,  APIKEY: xKey, scopes: ['*'] });
+            return next();
+        }
+
+        return res.status(401).json({ error: 'unauthorized', detail: 'Missing Bearer or x-api-key' });
+    } catch (e: any) {
+        return res.status(401).json({ error: 'invalid_token', detail: e?.message || 'bad bearer' });
     }
-    next();
 });
+
 
 // Ton serveur MCP — ajoute ici tes tools/resources/prompts
 const mcpServer = new McpServer({
