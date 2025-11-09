@@ -1,7 +1,7 @@
 {
   "name": "P-Link.io MCP Server",
-  "version": "1.2.0",
-  "description": "Exposes P-Link.io API as MCP tools, enabling programmatic access to authentication, sales creation, and data listing features for shops.",
+  "version": "0.0.1",
+  "description": "Exposes P-Link.io API as MCP tools, enabling programmatic access to sending money, requesting payment, creating payment links, get wallet balance or see transaction history.",
   "endpoints": [
     {
       "type": "http",
