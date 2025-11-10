@@ -192,6 +192,12 @@ It is recommended to use the hosted MCP HTTP/WebSocket server available at [http
 
 ---
 
+## Demo video
+
+[![Demo video](./doc/DemoThumb.jpg)](https://youtu.be/MTsc_nKiofw)
+
+---
+
 ## 🧩 MCP Manifest Endpoint
 
 The MCP API exposes a JSON manifest describing all available tools for compatible clients (ChatGPT, Claude, n8n, etc.).
