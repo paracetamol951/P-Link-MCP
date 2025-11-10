@@ -6,11 +6,11 @@
 
 [![P-Link MCP and 402](./P-Link_MCP.png)](https://youtu.be/sw9ASYZHEzY)
 
-**P-Link MCP Server** is a server compliant with the **MCP (Model Context Protocol)**, allowing ChatGPT, Claude, and other MCP-compatible clients to connect to a **payment system** on Solana.
+**P-Link MCP Server** is a server compliant with the **MCP (Model Context Protocol)**, integrating fetch-402 client from coinbase, and HTTP 402 protocol on server side, allowing ChatGPT, Claude, and other MCP-compatible clients to connect to a **payment system** on Solana.
 
 It provides a simple interface to:
 - Pay 402 links  
-- Create 402 payment links (still supporting human payment by card, or wallet) 
+- Create 402 payment links (supporting agent payment on Solana and human payment by card, Solana wallet, or P-Link account) 
 - Send money to any email or phone number  
 - View transaction history
 - View wallet information (balance, public wallet address)
