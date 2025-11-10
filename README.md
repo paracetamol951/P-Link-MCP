@@ -22,7 +22,7 @@ It provides a simple interface to:
 
 **Connect your Solana wallet to ChatGPT, Claude, or n8n — and manage your purchases simply by talking.**
 
-This project exposes the **p-link.io** API as **Model Context Protocol (MCP)** tools, available over **HTTP (Streamable)** (NOT SUPPORTED YET) and/or **STDIO**.
+This project exposes the **p-link.io** API as **Model Context Protocol (MCP)** tools, available over **HTTP (Streamable)** and/or **STDIO**.
 
 ---
 
