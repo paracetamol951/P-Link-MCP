@@ -59,7 +59,7 @@ If you don't have one, you can register at :
 
 https://p-link.io
 
-Then in the software, you have to get your APIKEY in API, Send money page.
+Then in the software, you have to get your APIKEY in API, Send money page : https://p-link.io/ApiDoc/Send
 
 ---
 
