@@ -31,10 +31,10 @@ This project exposes the **p-link.io** API as **Model Context Protocol (MCP)** t
 ## 🚀 Features
 
 - **send_money**: Send an amount of money to a wallet, an email, or a phone number. Can be any email or phone number. If the user has no P-Link account, an account is created for him and the access is emailed or sent by phone. If the user already has a P-Link account, the wallet is reused. **If the account is not claimed within 3 days, the funds are returned to the sender.**
-- **request_payment_link** : Create a payment link in order to be paid the desired amount, you can also provide a webhook that will be called on payment success, or a notification email address, or customize the payment page using the parameters. The payment link obtained complies to the HTTP 402 specification.
+- **request_payment_link** : Create a payment link in order to be paid the desired amount, you can also provide a webhook that will be called on payment success, or a notification email address, or customize the payment page using the parameters. The payment link obtained complies to the HTTP 402 specification, which means AI can pay for the ressource protected by this link. Payment can be made using any Solana token, and get converted to USDC during the transaction. Humans can pay by card. Payment hook can be easily connected to automation tools (IFTTT, Framer, etc).
 - **get_my_wallet_info** : Get information about your wallet (balance, public address, etc)
 - **get_wallet_history** : Retrieve list of the transactions related to my Solana wallet
-- **pay_and_get_402_protected_url** : Pay a HTTP 402 protected URL using your P-Link managed account, and returns the protected result
+- **pay_and_get_402_protected_url** : Pay a HTTP 402 protected URL, and returns the protected result
 
 ---
 
