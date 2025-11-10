@@ -18,6 +18,8 @@ It provides a simple interface to:
 
 > 🟢 Live Server: [https://mcp.p-link.io](https://mcp.p-link.io)
 
+[![P-Link MCP and 402](./docs/PresentationVideoThumb.jpg)](https://youtu.be/sw9ASYZHEzY)
+
 ---
 
 **Connect your Solana wallet to ChatGPT, Claude, or n8n — and manage your purchases simply by talking.**
