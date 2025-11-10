@@ -87,7 +87,7 @@ Provide the following content after replacing your SHOPID and APIKEY.
     "plink": {
       "command": "npx",
       "args": [
-        "plink-mcp",
+        "plink-mcp-server",
         "--apikey=[replaceWithYourAPIKEY]"
       ]
     }
@@ -100,7 +100,7 @@ Provide the following content after replacing your SHOPID and APIKEY.
 Create an installation folder and run the following command in your shell:
 
 ```bash
-npx p-link-mcp --apikey=abcdef123456
+npx plink-mcp-server --apikey=abcdef123456
 ```
 
 #### Install via npm
