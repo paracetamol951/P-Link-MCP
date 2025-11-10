@@ -18,7 +18,7 @@ It provides a simple interface to:
 
 > 🟢 Live Server: [https://mcp.p-link.io](https://mcp.p-link.io)
 
-[![P-Link MCP and 402](./docs/PresentationVideoThumb.jpg)](https://youtu.be/sw9ASYZHEzY)
+[![P-Link MCP and 402](./doc/PresentationVideoThumb.jpg)](https://youtu.be/sw9ASYZHEzY)
 
 ---
 
