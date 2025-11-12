@@ -57,9 +57,9 @@ This project exposes the **p-link.io** API as **Model Context Protocol (MCP)** t
 ## ⚙Prerequisities
 
 There are no prerequisities, using the MCP server, you can call the tool **get_wallet_and_api_key** in order to create a wallet associated with your email address, and login with it.
-Then if you want to send funds, you will need to send Solana to your wallet public address, or go to https://p-link.io in order to fund your account.
+Then if you want to send funds, you can use the tool **fund_my_wallet** that will give you the instructions to fund your wallet using a Solana wallet or a credit card.
 
-If you already have a P-Link account, you can specify the API_KEY paramater
+If you already have a P-Link account, you can specify the API_KEY parameter, if you want to create your account with your assistant, just leave this parameter.
 In the software, you can get your APIKEY in API, Send money page : https://p-link.io/ApiDoc/Send
 
 ---
