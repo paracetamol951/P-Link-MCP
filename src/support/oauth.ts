@@ -3,7 +3,7 @@ import 'dotenv/config';
 import crypto from 'node:crypto';
 import {  exportJWK, importPKCS8, SignJWT, jwtVerify, createLocalJWKSet, importSPKI } from 'jose';
 import { URL } from 'node:url';
-import { postForm } from './http.js';
+import { BASE, postForm } from './http.js';
 import { saveCode, loadCode, deleteCode } from './oauth-store.js';
 import { saveClient, getClient, clientExists, type OAuthClient } from './oauth-clients-store.js';
 
@@ -161,7 +161,7 @@ const codes = new Map<string, PendingCode>(); // code -> record*/
 
 // En dev on autorise un client "mcp-client" avec une redirect fournie en env
 const DEV_CLIENT_ID = process.env.MCP_OAUTH_CLIENT_ID || 'mcp-client';
-const DEV_REDIRECT = process.env.MCP_OAUTH_REDIRECT_URI || 'http://localhost:1234/callback';
+const DEV_REDIRECT = process.env.MCP_OAUTH_REDIRECT_URI || 'http://p-link.io/callback';
 const bootClient: OAuthClient = { redirect_uris: [DEV_REDIRECT], public: true };
 if (!(await clientExists(DEV_CLIENT_ID))) {
     await saveClient(DEV_CLIENT_ID, bootClient);
@@ -447,7 +447,7 @@ export default async function oauthRouter() {
             var jsP = {
                 myKey: password
             }
-            const fet = await fetch(process.env.API_BASE + '/api/getAPIUser', {
+            const fet = await fetch(BASE + '/api/getAPIUser', {
                 method: 'POST',
                 headers: {
                     Accept: 'application.json',

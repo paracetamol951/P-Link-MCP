@@ -2,6 +2,7 @@ import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z, ZodTypeAny } from 'zod';
 import { type Ctx, resolveAuth } from '../context.js';
 import { currencyZOD, InferFromShape, structData } from '../support/toolsData.js';
+import { BASE } from '../support/http.js';
 
 
 export function registerPaymentsTools(server: McpServer | any) {
@@ -30,7 +31,7 @@ export function registerPaymentsTools(server: McpServer | any) {
                 currencyUsed: currency,
                 title
             }
-            const fet = await fetch(process.env.API_BASE +'/api/tr4usr', {
+            const fet = await fetch(BASE +'/api/tr4usr', {
                 method: 'POST',
                 headers: {
                     Accept: 'application.json',
@@ -80,7 +81,7 @@ export function registerPaymentsTools(server: McpServer | any) {
                 var jsP = {
                     myKey: apiKey
                 }
-                const fet = await fetch(process.env.API_BASE +'/api/getAPIUser', {
+                const fet = await fetch(BASE +'/api/getAPIUser', {
                     method: 'POST',
                     headers: {
                         Accept: 'application.json',
@@ -102,7 +103,7 @@ export function registerPaymentsTools(server: McpServer | any) {
                 return structData({
                     error:'receivingPayment parameter required'});
             }
-            var req = await fetch(process.env.API_BASE +'/api/createPLink', {
+            var req = await fetch(BASE +'/api/createPLink', {
                 method: 'POST',
                 body: JSON.stringify(reqBody)
             });
@@ -130,7 +131,7 @@ export function registerPaymentsTools(server: McpServer | any) {
                 myKey: apiKey
             }
             process.stderr.write(`[caisse][info] XapiKey ${apiKey}\n`);
-            const fet = await fetch(process.env.API_BASE +'/api/getAPIUser', {
+            const fet = await fetch(BASE +'/api/getAPIUser', {
                 method: 'POST',
                 headers: {
                     Accept: 'application.json',
@@ -145,7 +146,7 @@ export function registerPaymentsTools(server: McpServer | any) {
 
             if (result?.pubk) {
                 process.stderr.write(`[caisse][info] fetch wallet infos\n`);
-                const walletInfos = await fetch(process.env.API_BASE +'/api/walletInfos/' + result.pubk + '/1');
+                const walletInfos = await fetch(BASE +'/api/walletInfos/' + result.pubk + '/1');
                 const walletBalance = await walletInfos.json();
                 result = { ...result, ...walletBalance };
             }
@@ -167,7 +168,7 @@ export function registerPaymentsTools(server: McpServer | any) {
         },
         async ({ trxID }: InferFromShape<typeof getGetTrxStateShape>, ctx: Ctx) => {
 
-            const fet = await fetch(process.env.API_BASE +'/api/trxState/'+trxID+'/'+new Date().getTime() );
+            const fet = await fetch(BASE +'/api/trxState/'+trxID+'/'+new Date().getTime() );
             var dat = await fet.text();
             process.stderr.write(`[caisse][info] dat2 ${dat}\n`);
 
@@ -189,7 +190,7 @@ export function registerPaymentsTools(server: McpServer | any) {
         },
         async ({ walletAddress }: InferFromShape<typeof getWalletHistoryShape>, ctx: Ctx) => {
 
-            const fet = await fetch(process.env.API_BASE +'/api/walletHistory/' + walletAddress +'/'+new Date().getTime() );
+            const fet = await fetch(BASE +'/api/walletHistory/' + walletAddress +'/'+new Date().getTime() );
             var dat = await fet.text();
             process.stderr.write(`[caisse][info] dat2 ${dat}\n`);
 

@@ -49,9 +49,10 @@ function loadDotenv(filePath?: string) {
 
     if (apiKey) process.env.APIKEY = apiKey;
     process.env.MCP_LANG = lang;
+    process.env.MCP_LANG = lang;
 
     if ( !process.env.APIKEY) {
-        console.error("❌ SHOPID et APIKEY doivent être définis via --shopid/--apikey ou .env");
+        console.error("❌ APIKEY doivent être définis via --apikey ou .env");
         process.exit(1);
     }
 

@@ -3,7 +3,7 @@ import { createKeyPairSignerFromBytes } from "@solana/kit";
 
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z, ZodTypeAny } from 'zod';
-import { get } from '../support/http.js';
+import { BASE, get } from '../support/http.js';
 import { t } from '../i18n/index.js';
 import { type Ctx, resolveAuth } from '../context.js';
 import { currencyZOD, InferFromShape, structData } from '../support/toolsData.js';
@@ -34,7 +34,7 @@ export function register402client(server: McpServer | any) {
             var jsP = {
                 myKey: apiKey
             }
-            const fet = await fetch(process.env.API_BASE +'/api/getAPIUser', {
+            const fet = await fetch(BASE +'/api/getAPIUser', {
                 method: 'POST',
                 headers: {
                     Accept: 'application.json',
