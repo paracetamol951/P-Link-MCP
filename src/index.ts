@@ -87,8 +87,9 @@ app.post('/mcp', async (req, res, next) => {
             setSessionAuth({ ok: true,  APIKEY: xKey, scopes: ['*'] });
             return next();
         }
+        return next();
 
-        return res.status(401).json({ error: 'unauthorized', detail: 'Missing Bearer or x-api-key' });
+        //return res.status(401).json({ error: 'unauthorized', detail: 'Missing Bearer or x-api-key' });
     } catch (e: any) {
         return res.status(401).json({ error: 'invalid_token', detail: e?.message || 'bad bearer' });
     }
