@@ -35,6 +35,10 @@
       "description": "Login using API_KEY"
     },
     {
+      "name": "fund_my_wallet",
+      "description": "Get the different ways in order to fund your wallet"
+    },
+    {
       "name": "send_money",
       "description": "Send money to an email, Solana wallet or phone number."
     },

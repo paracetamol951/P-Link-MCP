@@ -3,7 +3,7 @@ import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z, ZodTypeAny } from 'zod';
 //import { postJson } from '../support/http.js';
 import { t } from '../i18n/index.js';
-import { Ctx, getSessionAuth, setSessionAuth } from '../context.js';
+import { Ctx, getSessionAuth, resolveAuth, setSessionAuth } from '../context.js';
 import { BASE } from '../support/http.js';
 import { getAPIuser } from '../support/toolsData.js';
 
@@ -26,6 +26,8 @@ type AuthArgs = z.infer<z.ZodObject<typeof AuthInput>>;
 type AuthResponse = {
     APIKEY: string;
 };
+const getGetUserShape = {} satisfies Record<string, ZodTypeAny>;
+type GetUserShapeArgs = z.infer<z.ZodObject<typeof getGetUserShape>>;
 
 export function registerAuthTool(server: McpServer | any) {
     server.registerTool(
@@ -63,6 +65,82 @@ export function registerAuthTool(server: McpServer | any) {
                 ],
                 structuredContent: data, 
             };
+        }
+    );
+    server.registerTool(
+        'fund_my_wallet',
+        {
+            title: 'Fund your wallet',
+            description: 'Get the different ways in order to fund your wallet',
+            inputSchema: getGetUserShape, // shape
+        },
+        async ({ }: GetUserShapeArgs, ctx: Ctx) => {
+
+            const { apiKey } = resolveAuth(undefined, ctx);
+
+
+            var data = await getAPIuser(apiKey);
+
+            if (typeof data === 'object' && data && 'pubk' in data) {
+                var callParams = {
+                    transaction_details: {
+                        source_currency: t("usd"),
+                        destination_exchange_amount: 10,
+                        email: data.email
+                    },
+                    myCookie: apiKey,
+                    pubk: data.pubk
+                }
+                try {
+                    const response = await fetch(
+                        BASE+"/api/create-onramp-session",
+                        {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(callParams),
+                        });
+                    const onrampData = await response.json();
+                    const strData = "In order to fund your wallet, you can send Solana to this address : " + data.pubk + " or if you want to use a credit card to fund your account, open this link : " + onrampData?.onrampSession?.redirect_url;
+                    //process.stderr.write(`[caisse][info] set contxt: ${strData}\n`);
+                    return {
+                        content: [
+                            {
+                                type: 'text',
+                                text: strData,
+                            },
+                        ],
+                        structuredContent: {
+                            solanaWalletAddress: data.pubk,
+                            fundWalletLink: onrampData?.onrampSession?.redirect_url,
+                            debug: onrampData
+                        },
+                    };
+
+                } catch (e) {
+                    return {
+                        content: [
+                            {
+                                type: 'text',
+                                text: e?.toString(),
+                            },
+                        ],
+                        structuredContent: e,
+                    };
+                }
+            } else {
+                return {
+                    content: [
+                        {
+                            type: 'text',
+                            text: "User not found",
+                        },
+                    ],
+                    structuredContent: {
+                        error: "User not found",
+                    },
+                };
+            }
+
         }
     );
     server.registerTool(
@@ -104,11 +182,11 @@ export function registerAuthTool(server: McpServer | any) {
 
             const summary = [
                 `Account created for ${email}.`,
-                `APIKEY stored in session.`,
-            ].join(' ');
+                `APIKEY : ` + apiKey,
+            ];
 
             return {
-                content: [{ type: 'text', text: summary }],
+                content: [{ type: 'text', text: summary.join(' ') }],
                 structuredContent: { ok: true, email, APIKEY: apiKey },
             };
         }
