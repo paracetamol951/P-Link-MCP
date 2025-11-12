@@ -29,10 +29,10 @@ type AuthResponse = {
 
 export function registerAuthTool(server: McpServer | any) {
     server.registerTool(
-        'auth_get_token',
+        'login_with_api_key',
         {
             title: 'Login using API_KEY',
-            description: 'Login using API_KEY [not recommended if using public ressources]',
+            description: 'Login using API_KEY',
             inputSchema: AuthInput, // shape
         },
         async ({ API_KEY }: AuthArgs, ctx: Ctx) => {
@@ -68,7 +68,7 @@ export function registerAuthTool(server: McpServer | any) {
     server.registerTool(
         'get_wallet_and_api_key',
         {
-            title:  'Create wallet and get API_KEY',
+            title:  'Get a wallet and an API_KEY',
             description:  'Create wallet for this email and get API_KEY.',
             inputSchema: CreateAccountInput,
         },
@@ -79,11 +79,18 @@ export function registerAuthTool(server: McpServer | any) {
 
             const apiKey = res?.API_KEY ?? null;
 
+            if (res?.error) {
+                return {
+                    content: [{ type: 'text', text: res?.error }],
+                    is_error: true,
+                    structuredContent: resp,
+                };
+            }
             if (!apiKey) {
                 return {
                     content: [{ type: 'text', text: `API_KEY has been sent by email` }],
-                    is_error: true,
-                    structuredContent: resp,
+                    ok: true,
+                    structuredContent: res,
                 };
             }
 
@@ -96,8 +103,8 @@ export function registerAuthTool(server: McpServer | any) {
             ctx.auth = getSessionAuth();
 
             const summary = [
-                `Compte créé pour ${email}.`,
-                `APIKEY stockée en session.`,
+                `Account created for ${email}.`,
+                `APIKEY stored in session.`,
             ].join(' ');
 
             return {

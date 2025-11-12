@@ -27,6 +27,14 @@
   },
   "tools": [
     {
+      "name": "get_wallet_and_api_key",
+      "description": "Create wallet for this email and get API_KEY"
+    },
+    {
+      "name": "login_with_api_key",
+      "description": "Login using API_KEY"
+    },
+    {
       "name": "send_money",
       "description": "Send money to an email, Solana wallet or phone number."
     },
