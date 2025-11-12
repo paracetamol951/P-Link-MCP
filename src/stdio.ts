@@ -9,6 +9,7 @@ import { z, ZodTypeAny } from 'zod';
 import { setSessionAuth, getSessionAuth } from './context.js';
 import { registerPaymentsTools } from './tools/payments.js';
 import { register402client } from './tools/402client.js';
+import { registerAuthTool } from './tools/auth.js';
 
 // ==== Session globale (STDIO: une seule connexion) ====
 type AuthState = { ok: boolean;  APIKEY?: string; scopes?: string[] };
@@ -64,6 +65,7 @@ async function main() {
         //registerAuthTools(server);
         registerPaymentsTools(server);
         register402client(server);
+        registerAuthTool(server);
     } catch (e: any) {
         process.stderr.write(`[caisse][error] Echec registerXTools: ${e?.stack || e}\n`);
     }

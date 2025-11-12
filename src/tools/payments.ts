@@ -1,7 +1,7 @@
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z, ZodTypeAny } from 'zod';
 import { type Ctx, resolveAuth } from '../context.js';
-import { currencyZOD, InferFromShape, structData } from '../support/toolsData.js';
+import { currencyZOD, getAPIuser, InferFromShape, structData } from '../support/toolsData.js';
 import { BASE } from '../support/http.js';
 
 
@@ -78,21 +78,8 @@ export function registerPaymentsTools(server: McpServer | any) {
             }
             if (!reqBody.receivingPayment) {
                 const { apiKey } = resolveAuth(undefined, ctx);
-                var jsP = {
-                    myKey: apiKey
-                }
-                const fet = await fetch(BASE +'/api/getAPIUser', {
-                    method: 'POST',
-                    headers: {
-                        Accept: 'application.json',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(jsP)
-                });
-                var dat = await fet.text();
-                process.stderr.write(`[caisse][info] dat2 ${dat}\n`);
-
-                var result = JSON.parse(dat);
+                
+                var result = await getAPIuser(apiKey);
                 if (result.pubk) reqBody.receivingPayment = result.pubk;
 
                 if (result.error) {

@@ -1,6 +1,6 @@
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z, ZodTypeAny } from 'zod';
-import { get } from '../support/http.js';
+import { BASE, get } from '../support/http.js';
 import { t } from '../i18n/index.js';
 import { type Ctx, resolveAuth } from '../context.js';
 
@@ -52,5 +52,22 @@ export function structData(data: any) {
         structuredContent: wrapped,
     };
 }
+export async function getAPIuser(apiKey: string) {
+    var jsP = {
+        myKey: apiKey
+    }
+    const fet = await fetch(BASE + '/api/getAPIUser', {
+        method: 'POST',
+        headers: {
+            Accept: 'application.json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(jsP)
+    });
+    var dat = await fet.text();
+    process.stderr.write(`[caisse][info] dat2 ${dat}\n`);
 
+    var result = JSON.parse(dat);
+    return result;
+}
 export const currencyZOD = z.enum(['USD', 'EUR']).optional().default("USD")

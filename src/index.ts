@@ -6,6 +6,7 @@ import { setSessionAuth } from './context.js';
 import oauthRouter, { bearerValidator } from './support/oauth.js';
 import { registerPaymentsTools } from './tools/payments.js';
 import { register402client } from './tools/402client.js';
+import { registerAuthTool } from './tools/auth.js';
 
 const app = express();
 
@@ -104,6 +105,7 @@ const mcpServer = new McpServer({
 
 registerPaymentsTools(mcpServer);
 register402client(mcpServer);
+registerAuthTool(mcpServer);
 
 // Map sessionId -> transport
 const transports: Map<string, StreamableHTTPServerTransport> = new Map();
