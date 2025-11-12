@@ -34,10 +34,10 @@ This project exposes the **p-link.io** API as **Model Context Protocol (MCP)** t
 - **request_payment_link** : Create a payment link in order to be paid the desired amount, you can also provide a webhook that will be called on payment success, or a notification email address, or customize the payment page using the parameters. The payment link obtained complies to the HTTP 402 specification, which means AI can pay for the ressource protected by this link. Payment can be made using any Solana token, and get converted to USDC during the transaction. Humans can pay by card. Payment hook can be easily connected to automation tools (IFTTT, Framer, etc).
 - **get_my_wallet_info** : Get information about your wallet (balance, public address, etc)
 - **get_wallet_history** : Retrieve list of the transactions related to my Solana wallet
-- **pay_and_get_402_protected_url** : Pay a HTTP 402 protected URL, and returns the protected result
+- **pay_and_get_402_protected_url** : Pay a HTTP 402 protected URL, and returns the protected result. The assistant will use your wallet in order to pay for the requested ressource.
 - **get_wallet_and_api_key** : Create wallet for this email and get API_KEY
 - **login_with_api_key** : Login using API_KEY
-- **fund_my_wallet** : Get the different ways in order to fund your wallet
+- **fund_my_wallet** : Get the different ways in order to fund your wallet : Sending Solana cryptocurrency to the specified Solana public wallet address, or use a the provided link in order to fund your account using a credit card (provided by Stripe).
 
 ---
 
