@@ -6,8 +6,10 @@
   "type": "module",
   "module": "./src/smithery.ts",
   "scripts": {
-    "dev": "tsx watch src/index.ts",
-    "build": "tsc -p tsconfig.json",
+    "dev": "smithery dev",
+    "build": "smithery build",
+    "devold": "tsx watch src/index.ts",
+    "buildold": "tsc -p tsconfig.json",
     "start": "node build/stdio.js",
     "start:stdio": "node build/stdio.js",
     "start:http": "node build/index.js --http",
@@ -30,7 +32,6 @@
     "node": ">=18.17"
   },
   "dependencies": {
-    "glob": "^11.0.0",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "@modelcontextprotocol/sdk": "^1.2.0",
@@ -43,7 +44,7 @@
     "jose": "^6.1.0",
     "undici": "^6.19.8",
     "x402-fetch": "^0.7.0",
-    "zod": "^3.23.8"
+    "zod": "^3.25.46"
   },
   "devDependencies": {
     "@smithery/cli": "^1.6.3",
