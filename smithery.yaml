@@ -1,2 +1,5 @@
 runtime: typescript
 target: local
+build:
+  dockerfile: "Dockerfile"
+  dockerBuildPath: "."
