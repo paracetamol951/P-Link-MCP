@@ -1,14 +1,4 @@
 runtime: typescript
-startCommand:
-  type: "stdio"
-  configSchema:
-    type: object
-    required: []
-    properties:
-      apiKey:
-        type: string
-        title: "API Key"
-        description: "API key for P-Link.io"
 env:
   NODE_ENV: "production"
   DEBUG: "true"

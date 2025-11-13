@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "tsc -p tsconfig.json",
-    "start": "node build/index.js",
+    "start": "node build/stdio.js",
     "start:stdio": "node build/stdio.js",
     "start:http": "node build/index.js --http",
     "prepublishOnly": "npm run build"
