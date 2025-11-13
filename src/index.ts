@@ -199,7 +199,7 @@ app.get('/mcp', handleSessionRequest);
 app.delete('/mcp', handleSessionRequest);
 
 app.get('/', (_req: Request, res: Response) => {
-    res.redirect('https://p-link.io');
+    res.redirect('https://p-link.io/ApiDoc/Send');
 });
 
 // Lancement HTTP

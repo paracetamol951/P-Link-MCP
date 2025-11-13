@@ -1,0 +1,17 @@
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: plink-redis
+    restart: unless-stopped
+
+  mcp:
+    image: plink-mcp-server:latest
+    container_name: plink-mcp-server
+    environment:
+      REDIS_URL: redis://redis:6379
+      PORT: 8787
+      NODE_ENV: production
+    depends_on:
+      - redis
+    ports:
+      - "8787:8787"
