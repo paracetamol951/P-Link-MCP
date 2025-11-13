@@ -3,3 +3,7 @@ target: local
 build:
   dockerfile: "Dockerfile"
   dockerBuildPath: "."
+env:
+  NODE_ENV: "production"
+  DEBUG: "true"
+  LOG_LEVEL: "info"
