@@ -25,7 +25,57 @@ export const getGetUserShape = {
 } ;
 //type GetUserShapeArgs = z.infer<z.ZodObject<typeof getGetUserShape>>;
 
-export function registerAuthTool(server: McpServer ) {
+export function registerAuthTool(server: McpServer) {
+
+    server.registerTool(
+        'get_wallet_and_api_key',
+        {
+            title: 'Get a wallet and an API_KEY',
+            description: 'Create wallet for this email and get API_KEY.',
+            inputSchema: CreateAccountInput,
+            annotations: { title: "Get a wallet and an API_KEY", readOnlyHint: true }
+        },
+        async ({ email }) => {
+
+            const resp: any = await fetch(BASE + '/api/getOrCreateApiKey/' + email);
+            const res = await resp.json();
+
+            const apiKey = res?.API_KEY ?? null;
+
+            if (res?.error) {
+                return {
+                    content: [{ type: 'text', text: res?.error }],
+                    is_error: true,
+                    structuredContent: resp,
+                };
+            }
+            if (!apiKey) {
+                return {
+                    content: [{ type: 'text', text: `API_KEY has been sent by email` }],
+                    ok: true,
+                    structuredContent: res,
+                };
+            }
+
+            setSessionAuth({
+                ok: true,
+                APIKEY: apiKey,
+                scopes: ['*'],
+            });
+
+            //ctx.auth = getSessionAuth();
+
+            const summary = [
+                `Account created for ${email}.`,
+                `APIKEY : ` + apiKey,
+            ];
+
+            return {
+                content: [{ type: 'text', text: summary.join(' ') }],
+                structuredContent: { ok: true, email, APIKEY: apiKey },
+            };
+        }
+    );
     server.registerTool(
         'login_with_api_key',
         {
@@ -146,53 +196,4 @@ export function registerAuthTool(server: McpServer ) {
         }
     );
     
-    server.registerTool(
-        'get_wallet_and_api_key',
-        {
-            title:  'Get a wallet and an API_KEY',
-            description:  'Create wallet for this email and get API_KEY.',
-            inputSchema: CreateAccountInput,
-            annotations: { title: "Get a wallet and an API_KEY", readOnlyHint: true }
-        },
-        async ({ email }) => {
-
-            const resp: any = await fetch(BASE + '/api/getOrCreateApiKey/' + email);
-            const res = await resp.json();
-
-            const apiKey = res?.API_KEY ?? null;
-
-            if (res?.error) {
-                return {
-                    content: [{ type: 'text', text: res?.error }],
-                    is_error: true,
-                    structuredContent: resp,
-                };
-            }
-            if (!apiKey) {
-                return {
-                    content: [{ type: 'text', text: `API_KEY has been sent by email` }],
-                    ok: true,
-                    structuredContent: res,
-                };
-            }
-
-            setSessionAuth({
-                ok: true,
-                APIKEY: apiKey,
-                scopes: ['*'],
-            });
-
-            //ctx.auth = getSessionAuth();
-
-            const summary = [
-                `Account created for ${email}.`,
-                `APIKEY : ` + apiKey,
-            ];
-
-            return {
-                content: [{ type: 'text', text: summary.join(' ') }],
-                structuredContent: { ok: true, email, APIKEY: apiKey },
-            };
-        }
-    );
 }

@@ -99,88 +99,6 @@ Provide the following content after replacing your SHOPID and APIKEY.
 }
 ```
 
-#### Install via npx
-
-Create an installation folder and run the following command in your shell:
-
-```bash
-npx plink-mcp-server --apikey=abcdef123456
-```
-
-#### Install via npm
-
-```bash
-# 1) Dependencies
-npm install
-
-# 2) Environment variables (see below)
-
-# 3) Build
-npm run build
-```
-
-
-#### 🐳 Docker Setup
-
-##### STDIO mode (recommended)
-
-Build the image:
-
-```bash
-docker build -t plink-mcp-server:latest .
-```
-
-Run in STDIO mode:
-
-```bash
-docker run -it --rm plink-mcp-server:latest
-```
-
-The server will wait for MCP messages on STDIN.
-
----
-
-##### HTTP mode (requires Redis)
-
-Run Redis (example):
-
-```bash
-docker run -d --name mcp-redis redis:7-alpine
-```
-
-Run the MCP server in HTTP mode:
-
-```bash
-docker run --rm \
-  -e REDIS_URL=redis://mcp-redis:6379 \
-  -e PORT=8787 \
-  -p 8787:8787 \
-  --network bridge \
-  plink-mcp-server:latest \
-  node build/index.js --http
-```
-
-#### Configuration
-
-The binary/runner launches `src/stdio.ts` and communicates via MCP stdin/stdout.  
-Npm install configuration file `claude_desktop_config.json`
-
-```json
-{
-  "mcpServers": {
-    "plink": {
-      "command": "node",
-      "args": [
-        "{{PATH_TO_SRC}}/build/stdio.js"
-      ],
-      "cwd": "{{PATH_TO_SRC}}",
-      "env": {
-        "APIKEY": "XXXXXXXX"
-      }
-    }
-  }
-}
-```
 
 ### ChatGPT
 
@@ -196,6 +114,43 @@ In **Settings → Connectors → Create Connector**, fill in the following:
 | `Authentication` | `oAuth` |
 
 Once added, the connector will be **available in new conversations**.
+
+
+### Other MCP clients
+
+#### Stdio Install
+
+##### Via npx
+
+Create an installation folder and run the following command in your shell:
+
+```bash
+npx plink-mcp-server --apikey=abcdef123456
+```
+
+##### Via npm
+
+```bash
+# Dependencies
+git clone https://github.com/paracetamol951/P-Link-MCP.git
+
+# Dependencies
+npm install
+
+# Environment variables (see below)
+
+# Build
+npm run build
+```
+
+
+#### HTTP Install
+
+🐳 Run the MCP server in HTTP mode with Docker:
+
+```bash
+docker compose up
+```
 
 ---
 
@@ -213,20 +168,7 @@ APIKEY=XXXXXXXXXXXXXX
 
 ---
 
-## ▶️ Launch
-
-### HTTP Mode (Streamable MCP)
-
-The HTTP mode requires a Redis server.  
-It is recommended to use the hosted MCP HTTP/WebSocket server available at [https://mcp.p-link.io](https://mcp.p-link.io):
-
-- **POST** `https://mcp.p-link.io/mcp` with a JSON-RPC MCP message  
-- **GET** `https://mcp.p-link.io/health` → `{ "status": "ok" }`  
-- **GET** `https://mcp.p-link.io/.well-known/mcp/manifest.json` → MCP manifest  
-
----
-
-## 💻 Compatible Clients
+## 💻 Compatible Clients examples
 
 - **ChatGPT (OpenAI)** — via external MCP configuration  
 - **Claude (Anthropic)** — via "Tools manifest URL"  
@@ -243,13 +185,8 @@ It is recommended to use the hosted MCP HTTP/WebSocket server available at [http
 
 ## 🧩 MCP Manifest Endpoint
 
-The MCP API exposes a JSON manifest describing all available tools for compatible clients (ChatGPT, Claude, n8n, etc.).
-
-### Public manifest URL
-
+The MCP API exposes a JSON manifest describing all available tools for compatible clients (ChatGPT, Claude, n8n, etc.) :
 https://mcp.p-link.io/.well-known/mcp/manifest.json
-
-> 🗂️ This URL is the one to provide to your MCP client when configuring the server.
 
 ---
 
