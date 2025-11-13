@@ -1,7 +1,4 @@
-runtime: container
-build:
-  dockerfile: "Dockerfile"
-  dockerBuildPath: "."
+runtime: typescript
 startCommand:
   type: "stdio"
   configSchema:
