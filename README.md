@@ -1,4 +1,3 @@
-```markdown
 # 🧾 P-Link.io MCP Server
 
 [![smithery badge](https://smithery.ai/badge/@paracetamol951/p-link-mcp)](https://smithery.ai/server/@paracetamol951/p-link-mcp)
