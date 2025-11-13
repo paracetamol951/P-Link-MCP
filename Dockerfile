@@ -48,4 +48,4 @@ EXPOSE 8787
 
 # Lancement en mode HTTP (endpoint /mcp)
 # Équivalent à: npm run start:stdio ; could also be start:http if redis server present
-CMD ["node", "build/index.js", "--stdio"]
+CMD ["node", "build/stdio.js", "--stdio"]

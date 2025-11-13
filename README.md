@@ -118,6 +118,47 @@ npm install
 npm run build
 ```
 
+
+#### 🐳 Docker Setup
+
+##### STDIO mode (recommended)
+
+Build the image:
+
+```bash
+docker build -t plink-mcp-server:latest .
+```
+
+Run in STDIO mode:
+
+```bash
+docker run -it --rm plink-mcp-server:latest
+```
+
+The server will wait for MCP messages on STDIN.
+
+---
+
+##### HTTP mode (requires Redis)
+
+Run Redis (example):
+
+```bash
+docker run -d --name mcp-redis redis:7-alpine
+```
+
+Run the MCP server in HTTP mode:
+
+```bash
+docker run --rm \
+  -e REDIS_URL=redis://mcp-redis:6379 \
+  -e PORT=8787 \
+  -p 8787:8787 \
+  --network bridge \
+  plink-mcp-server:latest \
+  node build/index.js --http
+```
+
 #### Configuration
 
 The binary/runner launches `src/stdio.ts` and communicates via MCP stdin/stdout.  
