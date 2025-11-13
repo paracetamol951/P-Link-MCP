@@ -1,5 +1,7 @@
+```markdown
 # 🧾 P-Link.io MCP Server
 
+[![smithery badge](https://smithery.ai/badge/@paracetamol951/p-link-mcp)](https://smithery.ai/server/@paracetamol951/p-link-mcp)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
 [![Live Demo](https://img.shields.io/badge/Demo-online-brightgreen.svg)](https://youtu.be/MTsc_nKiofw)
 [![GitHub Stars](https://img.shields.io/github/stars/paracetamol951/P-Link-MCP?style=social)](https://github.com/paracetamol951/P-Link-MCP/stargazers)
@@ -43,14 +45,14 @@ This project exposes the **p-link.io** API as **Model Context Protocol (MCP)** t
 
 ## 🔹 Example usage (ChatGPT / Claude MCP)
 
-- 💬 “Hi ! What is the balance of my wallet ?”  
-- 💬 “Can you buy the shoes i like at : https://p-link.io/@phh/0.01?PRODUCT=My_Favorite_shoes&id=888”  
-- 💬 “Send 0.2$ to @Paracetamol”  
-- 💬 “Send 0.2$ to s.smith@mail.com”  
-- 💬 “Can you check the status of this transaction ?”  
-- 💬 “Create a payment link of 10 euros”  
-- 💬 “Show me my transaction history”  
-- 💬 “Pay for this P-Link my friend sent me : https://p-link.io/@Paracetamol/0.1”  
+- 💬 "Hi ! What is the balance of my wallet ?"  
+- 💬 "Can you buy the shoes i like at : https://p-link.io/@phh/0.01?PRODUCT=My_Favorite_shoes&id=888"  
+- 💬 "Send 0.2$ to @Paracetamol"  
+- 💬 "Send 0.2$ to s.smith@mail.com"  
+- 💬 "Can you check the status of this transaction ?"  
+- 💬 "Create a payment link of 10 euros"  
+- 💬 "Show me my transaction history"  
+- 💬 "Pay for this P-Link my friend sent me : https://p-link.io/@Paracetamol/0.1"  
 
 ---
 
@@ -228,7 +230,7 @@ It is recommended to use the hosted MCP HTTP/WebSocket server available at [http
 ## 💻 Compatible Clients
 
 - **ChatGPT (OpenAI)** — via external MCP configuration  
-- **Claude (Anthropic)** — via “Tools manifest URL”  
+- **Claude (Anthropic)** — via "Tools manifest URL"  
 - **n8n / Flowise / LangChain** — import via public URL 
 - You are welcome to complete !
 
@@ -255,3 +257,4 @@ https://mcp.p-link.io/.well-known/mcp/manifest.json
 ## 📋 License
 
 © 2025. GNU GENERAL PUBLIC LICENSE
+```
