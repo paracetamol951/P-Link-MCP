@@ -54,7 +54,7 @@ async function main() {
         version: '0.0.1',
     });
     // --- Guard inline: protège tous les tools sauf whitelist ---
-    type Ctx = { auth?: { ok: boolean; user?: string;  scopes?: string[] } };
+    //type Ctx = { auth?: { ok: boolean; user?: string;  scopes?: string[] } };
     // Wrap de registerTool
     
 

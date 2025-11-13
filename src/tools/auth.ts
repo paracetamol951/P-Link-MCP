@@ -1,35 +1,32 @@
 // src/tools/auth.ts (ajout)
-import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
+import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z, ZodTypeAny } from 'zod';
 //import { postJson } from '../support/http.js';
 import { t } from '../i18n/index.js';
-import { Ctx, getSessionAuth, resolveAuth, setSessionAuth } from '../context.js';
+import {  resolveAuth, setSessionAuth } from '../context.js';
 import { BASE } from '../support/http.js';
 import { getAPIuser } from '../support/toolsData.js';
 
-// --- EXISTANT ---
-// const AuthInput = {...} etc.
-// export function registerAuthTools(server: McpServer | any) { ... outils existants ... }
-
-// --- NOUVEAU ---
 const CreateAccountInput = {
     email: z.string().email(),
-} satisfies Record<string, ZodTypeAny>;
-
-type CreateAccountArgs = z.infer<z.ZodObject<typeof CreateAccountInput>>;
-
-const AuthInput = {
-    API_KEY: z.string(),
-} satisfies Record<string, ZodTypeAny>;
-
-type AuthArgs = z.infer<z.ZodObject<typeof AuthInput>>;
-type AuthResponse = {
-    APIKEY: string;
 };
-const getGetUserShape = {} satisfies Record<string, ZodTypeAny>;
-type GetUserShapeArgs = z.infer<z.ZodObject<typeof getGetUserShape>>;
 
-export function registerAuthTool(server: McpServer | any) {
+//type CreateAccountArgs = z.infer<z.ZodObject<typeof CreateAccountInput>>;
+
+export const AuthInput = {
+    API_KEY: z.string(),
+} ;
+
+//export type AuthArgs = z.infer<z.ZodObject<typeof AuthInput>>;
+/*type AuthResponse = {
+    APIKEY: string;
+};*/
+export const getGetUserShape = {
+    amount: z.number().positive(),
+} ;
+//type GetUserShapeArgs = z.infer<z.ZodObject<typeof getGetUserShape>>;
+
+export function registerAuthTool(server: McpServer ) {
     server.registerTool(
         'login_with_api_key',
         {
@@ -37,7 +34,7 @@ export function registerAuthTool(server: McpServer | any) {
             description: 'Login using API_KEY',
             inputSchema: AuthInput, // shape
         },
-        async ({ API_KEY }: AuthArgs, ctx: Ctx) => {
+        async ({ API_KEY }) => {
         //async ({ APIKEY }: { API_KEY: string }, ctx: Ctx) => {
             var data = await getAPIuser(API_KEY);
 
@@ -48,7 +45,7 @@ export function registerAuthTool(server: McpServer | any) {
                     scopes: ['*'], 
                 });
 
-                ctx.auth = getSessionAuth();
+                //ctx.auth = getSessionAuth();
             } else {
                 console.error('Erreur API:', data);
             }
@@ -74,75 +71,80 @@ export function registerAuthTool(server: McpServer | any) {
             description: 'Get the different ways in order to fund your wallet',
             inputSchema: getGetUserShape, // shape
         },
-        async ({ }: GetUserShapeArgs, ctx: Ctx) => {
+        async ({ amount } ) => {
 
-            const { apiKey } = resolveAuth(undefined, ctx);
+            try {
+                const { apiKey } = resolveAuth(undefined, undefined);
 
+                var data = await getAPIuser(apiKey);
 
-            var data = await getAPIuser(apiKey);
+                if (typeof data === 'object' && data && 'pubk' in data) {
+                    var callParams = {
+                        transaction_details: {
+                            source_currency: "usd",
+                            destination_exchange_amount: amount,
+                            email: data.email
+                        },
+                        myCookie: apiKey,
+                        pubk: data.pubk
+                    }
+                    try {
+                        const response = await fetch(
+                            BASE+"/api/create-onramp-session",
+                            {
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify(callParams),
+                            });
+                        const onrampData = await response.json();
+                        const strData = "In order to fund your wallet, you can send Solana to this address : " + data.pubk + " or if you want to use a credit card to fund your account, open this link : " + onrampData?.onrampSession?.redirect_url;
 
-            if (typeof data === 'object' && data && 'pubk' in data) {
-                var callParams = {
-                    transaction_details: {
-                        source_currency: t("usd"),
-                        destination_exchange_amount: 10,
-                        email: data.email
-                    },
-                    myCookie: apiKey,
-                    pubk: data.pubk
-                }
-                try {
-                    const response = await fetch(
-                        BASE+"/api/create-onramp-session",
-                        {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify(callParams),
-                        });
-                    const onrampData = await response.json();
-                    const strData = "In order to fund your wallet, you can send Solana to this address : " + data.pubk + " or if you want to use a credit card to fund your account, open this link : " + onrampData?.onrampSession?.redirect_url;
-                    //process.stderr.write(`[caisse][info] set contxt: ${strData}\n`);
+                        return {
+                            content: [
+                                {
+                                    type: 'text',
+                                    text: strData,
+                                },
+                            ],
+                            structuredContent: {
+                                solanaWalletAddress: data.pubk,
+                                fundWalletLink: onrampData?.onrampSession?.redirect_url,
+                                debug: onrampData
+                            },
+                        };
+
+                    } catch (e) {
+                    }
+                } else {
                     return {
                         content: [
                             {
                                 type: 'text',
-                                text: strData,
+                                text: "User not found",
                             },
                         ],
                         structuredContent: {
-                            solanaWalletAddress: data.pubk,
-                            fundWalletLink: onrampData?.onrampSession?.redirect_url,
-                            debug: onrampData
+                            error: "User not found",
                         },
-                    };
-
-                } catch (e) {
-                    return {
-                        content: [
-                            {
-                                type: 'text',
-                                text: e?.toString(),
-                            },
-                        ],
-                        structuredContent: e,
                     };
                 }
-            } else {
-                return {
-                    content: [
-                        {
-                            type: 'text',
-                            text: "User not found",
-                        },
-                    ],
-                    structuredContent: {
-                        error: "User not found",
-                    },
-                };
+            } catch (e) {
             }
+            return {
+                content: [
+                    {
+                        type: 'text',
+                        text: "User not found",
+                    },
+                ],
+                structuredContent: {
+                    error: "User not found",
+                },
+            };
 
         }
     );
+    
     server.registerTool(
         'get_wallet_and_api_key',
         {
@@ -150,7 +152,7 @@ export function registerAuthTool(server: McpServer | any) {
             description:  'Create wallet for this email and get API_KEY.',
             inputSchema: CreateAccountInput,
         },
-        async ({ email }: CreateAccountArgs, ctx: Ctx) => {
+        async ({ email }) => {
 
             const resp: any = await fetch(BASE + '/api/getOrCreateApiKey/' + email);
             const res = await resp.json();
@@ -178,7 +180,7 @@ export function registerAuthTool(server: McpServer | any) {
                 scopes: ['*'],
             });
 
-            ctx.auth = getSessionAuth();
+            //ctx.auth = getSessionAuth();
 
             const summary = [
                 `Account created for ${email}.`,

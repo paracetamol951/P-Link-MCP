@@ -1,7 +1,7 @@
 import { wrapFetchWithPayment, decodeXPaymentResponse } from "x402-fetch";
 import { createKeyPairSignerFromBytes } from "@solana/kit";
 
-import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
+import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z, ZodTypeAny } from 'zod';
 import { BASE, get } from '../support/http.js';
 import { t } from '../i18n/index.js';
@@ -15,11 +15,11 @@ import { callPaid } from "../support/test402.js";
 
 
 
-export function register402client(server: McpServer | any) {
+export function register402client(server: McpServer ) {
     
     const get402clientShape = {
         url: z.string().describe("The 402 protected URL")
-    } satisfies Record<string, ZodTypeAny>;
+    } ;
 
     server.registerTool(
         'pay_and_get_402_protected_url',
@@ -29,8 +29,8 @@ export function register402client(server: McpServer | any) {
             inputSchema: get402clientShape, 
             annotations: { readOnlyHint: true }
         },
-        async ({ url }: InferFromShape<typeof get402clientShape>, ctx: Ctx) => {
-            const { apiKey } = resolveAuth(undefined, ctx);
+        async ({ url } ) => {
+            const { apiKey } = resolveAuth(undefined, undefined);
             var jsP = {
                 myKey: apiKey
             }
@@ -58,7 +58,7 @@ export function register402client(server: McpServer | any) {
 
             const paidResult = await callPaid(url, pk);
 
-            return structData(paidResult);
+            return structData(paidResult) as any;
         }
     );
 }

@@ -1,17 +1,17 @@
-import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
+import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z, ZodTypeAny } from 'zod';
 import { type Ctx, resolveAuth } from '../context.js';
 import { currencyZOD, getAPIuser, InferFromShape, structData } from '../support/toolsData.js';
 import { BASE } from '../support/http.js';
 
 
-export function registerPaymentsTools(server: McpServer | any) {
+export function registerPaymentsTools(server: McpServer ) {
     const getSendMoneyShape = {
         to: z.string().describe("Email, phone or Solana wallet"),
         amount: z.number().positive().describe("Amount to send"),
         currency: currencyZOD.describe("Currency of specified amount to send"),
         title: z.string().optional().describe("A title for the transaction shown to the receiver")
-    } satisfies Record<string, ZodTypeAny>;
+    } ;
 
     server.registerTool(
         'send_money',
@@ -21,8 +21,8 @@ export function registerPaymentsTools(server: McpServer | any) {
             inputSchema: getSendMoneyShape, // ZodRawShape,
             //annotations: { readOnlyHint: true }
         },
-        async ({ to, amount, currency, title }: InferFromShape<typeof getSendMoneyShape>, ctx: Ctx) => {
-            const { apiKey } = resolveAuth(undefined, ctx);
+        async ({ to, amount, currency, title }) => {
+            const { apiKey } = resolveAuth(undefined, undefined);
 
             var jsP = {
                 myKey: apiKey,
@@ -31,7 +31,7 @@ export function registerPaymentsTools(server: McpServer | any) {
                 currencyUsed: currency,
                 title
             }
-            const fet = await fetch(BASE +'/api/tr4usr', {
+            const fet = await fetch(BASE + '/api/tr4usr', {
                 method: 'POST',
                 headers: {
                     Accept: 'application.json',
@@ -44,9 +44,14 @@ export function registerPaymentsTools(server: McpServer | any) {
             //console.log(dat);
             var result = JSON.parse(dat);
             //console.log(result);
-
-            return structData(result);
-            //return { content, structuredContent: isText ? undefined : data };
+            return structData(result) as any;
+            //return tmpRes;
+            /*return {
+                content: [{ type: 'text', text: "Error" }],
+                structuredContent: { type: 'text', text: "Error" },
+            };*/
+            /*
+*/
         }
     );
     const getCreatePLinkShape = {
@@ -61,7 +66,7 @@ export function registerPaymentsTools(server: McpServer | any) {
         param: z.string().optional().describe("Custom parameter"),
         webhook: z.string().optional().describe("HTTP webhook to call on payment success"),
         notificationEmail: z.string().optional().describe("Email to notify on payment success")
-    } satisfies Record<string, ZodTypeAny>;
+    } ;
 
     server.registerTool(
         'request_payment_link',
@@ -71,13 +76,13 @@ export function registerPaymentsTools(server: McpServer | any) {
             inputSchema: getCreatePLinkShape, // ZodRawShape,
             //annotations: { readOnlyHint: true }
         },
-        async (reqBody: InferFromShape<typeof getCreatePLinkShape>, ctx: Ctx) => {
+        async (reqBody) => {
             //const { apiKey } = resolveAuth(undefined, ctx);
             if (reqBody.title) {
                 reqBody.title = reqBody.title.split('\u20AC').join('euro');
             }
             if (!reqBody.receivingPayment) {
-                const { apiKey } = resolveAuth(undefined, ctx);
+                const { apiKey } = resolveAuth(undefined, undefined);
                 
                 var result = await getAPIuser(apiKey);
                 if (result.pubk) reqBody.receivingPayment = result.pubk;
@@ -97,11 +102,11 @@ export function registerPaymentsTools(server: McpServer | any) {
             var plink_Info = await req.json();
 
 
-            return structData(plink_Info);
+            return structData(plink_Info) as any;
         }
     );
 
-    const getGetUserShape = {} satisfies Record<string, ZodTypeAny>;
+    const getGetUserShape = {} ;
 
     server.registerTool(
         'get_my_wallet_info',
@@ -111,9 +116,9 @@ export function registerPaymentsTools(server: McpServer | any) {
             inputSchema: getGetUserShape, // ZodRawShape,
             //annotations: { readOnlyHint: true }
         },
-        async (reqBody: InferFromShape<typeof getGetUserShape>, ctx: Ctx) => {
+        async (reqBody) => {
 
-            const { apiKey } = resolveAuth(undefined, ctx);
+            const { apiKey } = resolveAuth(undefined, undefined);
             var jsP = {
                 myKey: apiKey
             }
@@ -137,13 +142,13 @@ export function registerPaymentsTools(server: McpServer | any) {
                 const walletBalance = await walletInfos.json();
                 result = { ...result, ...walletBalance };
             }
-            return structData(result);
+            return structData(result) as any;
         }
     );
 
     const getGetTrxStateShape = {
         trxID: z.string().optional().describe("The transaction ID")
-    } satisfies Record<string, ZodTypeAny>;
+    };
 
     server.registerTool(
         'get_transaction_state',
@@ -153,19 +158,19 @@ export function registerPaymentsTools(server: McpServer | any) {
             inputSchema: getGetTrxStateShape, // ZodRawShape,
             annotations: { readOnlyHint: true }
         },
-        async ({ trxID }: InferFromShape<typeof getGetTrxStateShape>, ctx: Ctx) => {
+        async ({ trxID }) => {
 
             const fet = await fetch(BASE +'/api/trxState/'+trxID+'/'+new Date().getTime() );
             var dat = await fet.text();
             process.stderr.write(`[caisse][info] dat2 ${dat}\n`);
 
             var result = JSON.parse(dat);
-            return structData(result);
+            return structData(result) as any;
         }
     );
     const getWalletHistoryShape = {
         walletAddress: z.string().optional().describe("The wallet address")
-    } satisfies Record<string, ZodTypeAny>;
+    };
 
     server.registerTool(
         'get_wallet_history',
@@ -175,14 +180,14 @@ export function registerPaymentsTools(server: McpServer | any) {
             inputSchema: getWalletHistoryShape, // ZodRawShape,
             annotations: { readOnlyHint: true }
         },
-        async ({ walletAddress }: InferFromShape<typeof getWalletHistoryShape>, ctx: Ctx) => {
+        async (param) => {
 
-            const fet = await fetch(BASE +'/api/walletHistory/' + walletAddress +'/'+new Date().getTime() );
+            const fet = await fetch(BASE +'/api/walletHistory/' + param.walletAddress +'/'+new Date().getTime() );
             var dat = await fet.text();
             process.stderr.write(`[caisse][info] dat2 ${dat}\n`);
 
             var result = JSON.parse(dat);
-            return structData(result);
+            return structData(result) as any;
         }
     );
 }

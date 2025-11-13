@@ -31,26 +31,37 @@ z.object({
 
 
 export function structData(data: any) {
-    // on ne touche PAS à structuredContent (c’est ce que ChatGPT utilise)
-    const light = Array.isArray(data)
-        ? data.slice(0, 5000)//.map(({ id, nom, email, tel, ...r }) => ({ id, nom, email, tel }))
-        : data;
-
-    const maxLength = 40000;
-    const preview =
-        typeof light === 'string'
-            ? (light.length > maxLength ? light.slice(0, maxLength) + '…(truncated)' : light)
-            : safeStringify(light, 2, maxLength);   // <-- aperçu court et “safe”
-    const wrapped =
-        Array.isArray(data)
-            ? { data: data }
-            : data && typeof data === 'object'
-                ? data
-                : { data: data };
     return {
-        content: [{ type: 'text', text: preview }],
-        structuredContent: wrapped,
+        content: [{ type: 'text', text: "Error" }],
+        structuredContent: { type: 'text', text: "Error" },
     };
+    // on ne touche PAS à structuredContent (c’est ce que ChatGPT utilise)
+    /*try {
+        const light = Array.isArray(data)
+            ? data.slice(0, 5000)//.map(({ id, nom, email, tel, ...r }) => ({ id, nom, email, tel }))
+            : data;
+
+        const maxLength = 40000;
+        const preview =
+            typeof light === 'string'
+                ? (light.length > maxLength ? light.slice(0, maxLength) + '…(truncated)' : light)
+                : safeStringify(light, 2, maxLength);   // <-- aperçu court et “safe”
+        const wrapped =
+            Array.isArray(data)
+                ? { data: data }
+                : data && typeof data === 'object'
+                    ? data
+                    : { data: data };
+        return {
+            content: [{ type: 'text', text: preview }],
+            structuredContent: wrapped,
+        };
+    } catch (e) {
+    }
+    return {
+        content: [{ type: 'text', text: "Error" }],
+        structuredContent: { type: 'text', text: "Error" },
+    };*/
 }
 export async function getAPIuser(apiKey: string) {
     var jsP = {
