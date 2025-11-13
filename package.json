@@ -1,6 +1,6 @@
 {
   "name": "plink-mcp-server",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "MCP server exposing P-Link.io API as tools",
   "type": "module",
   "scripts": {
