@@ -1,8 +1,9 @@
-runtime: typescript
-target: local
+runtime: container
 build:
   dockerfile: "Dockerfile"
   dockerBuildPath: "."
+startCommand:
+  type: "http"
 env:
   NODE_ENV: "production"
   DEBUG: "true"

@@ -15,3 +15,4 @@ services:
       - redis
     ports:
       - "8787:8787"
+    command: ["node", "build/index.js", "--http"]
