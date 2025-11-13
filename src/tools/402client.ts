@@ -1,19 +1,10 @@
-import { wrapFetchWithPayment, decodeXPaymentResponse } from "x402-fetch";
-import { createKeyPairSignerFromBytes } from "@solana/kit";
+
 
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
-import { z, ZodTypeAny } from 'zod';
-import { BASE, get } from '../support/http.js';
-import { t } from '../i18n/index.js';
-import { type Ctx, resolveAuth } from '../context.js';
-import { currencyZOD, InferFromShape, structData } from '../support/toolsData.js';
-import { callPaid } from "../support/test402.js";
-
-
-
- 
-
-
+import { z } from 'zod';
+import { BASE } from '../support/http.js';
+import {  resolveAuth } from '../context.js';
+import {  structData } from '../support/toolsData.js';
 
 export function register402client(server: McpServer ) {
     
@@ -26,15 +17,16 @@ export function register402client(server: McpServer ) {
         {
             title: "Pay a HTTP 402 protected URL",
             description: "Pay a HTTP 402 protected URL using your P-Link managed account, and gets the result",
-            inputSchema: get402clientShape, 
-            annotations: { readOnlyHint: true }
+            inputSchema: get402clientShape,
+            annotations: { title: 'Pay 402 link', destructiveHint: true, openWorldHint: true }
         },
         async ({ url } ) => {
             const { apiKey } = resolveAuth(undefined, undefined);
             var jsP = {
-                myKey: apiKey
+                myKey: apiKey,
+                url
             }
-            const fet = await fetch(BASE +'/api/getAPIUser', {
+            const fet = await fetch(BASE +'/api/pay402link', {
                 method: 'POST',
                 headers: {
                     Accept: 'application.json',
@@ -46,19 +38,7 @@ export function register402client(server: McpServer ) {
             process.stderr.write(`[caisse][info] dat2 ${dat}\n`);
 
             var result = JSON.parse(dat);
-            if (result.error) {
-                return structData(result);
-            }
-            if (!result.pk) {
-                return structData({error:'This is not a managed wallet'});
-            }
-
-            const pk = result.pk;
-            process.stderr.write(`[caisse][info] ok data ++++\n`);
-
-            const paidResult = await callPaid(url, pk);
-
-            return structData(paidResult) as any;
+            return structData(result) as any;
         }
     );
 }

@@ -20,6 +20,7 @@ export function registerPaymentsTools(server: McpServer ) {
             description: "Send money to an email, Solana wallet or phone number.",
             inputSchema: getSendMoneyShape, // ZodRawShape,
             //annotations: { readOnlyHint: true }
+            annotations: { title: 'Send money', destructiveHint: true, openWorldHint: true }
         },
         async ({ to, amount, currency, title }) => {
             const { apiKey } = resolveAuth(undefined, undefined);
@@ -74,7 +75,7 @@ export function registerPaymentsTools(server: McpServer ) {
             title: "Create a payment link",
             description: "Create a payment link in order to request a payment",
             inputSchema: getCreatePLinkShape, // ZodRawShape,
-            //annotations: { readOnlyHint: true }
+            annotations: { title: "Create a payment link", readOnlyHint: true }
         },
         async (reqBody) => {
             //const { apiKey } = resolveAuth(undefined, ctx);
@@ -114,7 +115,7 @@ export function registerPaymentsTools(server: McpServer ) {
             title: "Wallet infos and balance",
             description: "Retrieve the wallet infos about the connected P-Link account (Solana wallet address, wallet balance)",
             inputSchema: getGetUserShape, // ZodRawShape,
-            //annotations: { readOnlyHint: true }
+            annotations: { title: "Wallet infos and balance", readOnlyHint: true }
         },
         async (reqBody) => {
 
@@ -156,7 +157,7 @@ export function registerPaymentsTools(server: McpServer ) {
             title: "Get transaction state",
             description: "Retrieve the state and details of a transaction using Solana trx ID",
             inputSchema: getGetTrxStateShape, // ZodRawShape,
-            annotations: { readOnlyHint: true }
+            annotations: { title: "Get transaction state",readOnlyHint: true }
         },
         async ({ trxID }) => {
 
@@ -178,7 +179,7 @@ export function registerPaymentsTools(server: McpServer ) {
             title: "Get wallet history",
             description: "Retrieve list of the transactions related to the specified Solana wallet address",
             inputSchema: getWalletHistoryShape, // ZodRawShape,
-            annotations: { readOnlyHint: true }
+            annotations: { title: "Get wallet history", readOnlyHint: true }
         },
         async (param) => {
 

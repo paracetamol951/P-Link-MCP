@@ -40,9 +40,65 @@ export default function createServer({
 	const server = new McpServer({
 		name: 'p-link',
 		version: '0.0.1',
+		"capabilities": {
+			"tools": true,
+			"resources": false,
+			"prompts": false
+		},
+		"endpoints": [
+			{
+				"type": "http",
+				"url": "https://mcp.p-link.io/mcp",
+				"supports_streaming": true
+			}
+		],
+		configSchema: {
+			"type": "object",
+			"properties": {
+				"API_KEY": { "type": "string", "description": "API_KEY of your P-Link.io account" }
+			},
+			"required": []
+		},
+		"tools": [
+			{
+				"name": "get_wallet_and_api_key",
+				"description": "Create wallet for this email and get API_KEY"
+			},
+			{
+				"name": "login_with_api_key",
+				"description": "Login using API_KEY"
+			},
+			{
+				"name": "fund_my_wallet",
+				"description": "Get the different ways in order to fund your wallet"
+			},
+			{
+				"name": "send_money",
+				"description": "Send money to an email, Solana wallet or phone number."
+			},
+			{
+				"name": "request_payment_link",
+				"description": "Create a payment link in order to request a payment to your account"
+			},
+			{
+				"name": "get_my_wallet_info",
+				"description": "Retrieve the wallet infos about the connected P-Link account (Solana wallet address, Balance)"
+			},
+			{
+				"name": "get_transaction_state",
+				"description": "Retrieve the state and details of a transaction using Solana trx ID"
+			},
+			{
+				"name": "get_wallet_history",
+				"description": "Retrieve list of the transactions related to my Solana wallet"
+			},
+			{
+				"name": "pay_and_get_402_protected_url",
+				"description": "Pay a HTTP 402 protected URL using your P-Link managed account, and returns the result"
+			}
+		]
 	});
 	if (config?.API_KEY) {
-
 		setSessionAuth({ ok: true, APIKEY: config.API_KEY, scopes: ['*'] });
 	}
 	registerAuthTool(server);

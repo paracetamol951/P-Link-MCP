@@ -9,6 +9,16 @@
       "supports_streaming": true
     }
   ],
+  "configSchema": {
+    "type": "object",
+    "properties": {
+      "API_KEY": {
+        "type": "string",
+        "description": "API_KEY of your P-Link.io account"
+      }
+    },
+    "required": []
+  },
   "auth": {
     "type": "api_key",
     "fields": {

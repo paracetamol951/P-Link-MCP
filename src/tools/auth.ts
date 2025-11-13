@@ -1,8 +1,7 @@
 // src/tools/auth.ts (ajout)
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
-import { z, ZodTypeAny } from 'zod';
-//import { postJson } from '../support/http.js';
-import { t } from '../i18n/index.js';
+import { z, } from 'zod';
+
 import {  resolveAuth, setSessionAuth } from '../context.js';
 import { BASE } from '../support/http.js';
 import { getAPIuser } from '../support/toolsData.js';
@@ -22,7 +21,7 @@ export const AuthInput = {
     APIKEY: string;
 };*/
 export const getGetUserShape = {
-    amount: z.number().positive(),
+    amount: z.number().positive().default(10).optional(),
 } ;
 //type GetUserShapeArgs = z.infer<z.ZodObject<typeof getGetUserShape>>;
 
@@ -33,6 +32,7 @@ export function registerAuthTool(server: McpServer ) {
             title: 'Login using API_KEY',
             description: 'Login using API_KEY',
             inputSchema: AuthInput, // shape
+            annotations: { title: "Login using API_KEY", readOnlyHint: true }
         },
         async ({ API_KEY }) => {
         //async ({ APIKEY }: { API_KEY: string }, ctx: Ctx) => {
@@ -70,6 +70,7 @@ export function registerAuthTool(server: McpServer ) {
             title: 'Fund your wallet',
             description: 'Get the different ways in order to fund your wallet',
             inputSchema: getGetUserShape, // shape
+            annotations: { title: "Fund your wallet", readOnlyHint: true }
         },
         async ({ amount } ) => {
 
@@ -82,7 +83,7 @@ export function registerAuthTool(server: McpServer ) {
                     var callParams = {
                         transaction_details: {
                             source_currency: "usd",
-                            destination_exchange_amount: amount,
+                            destination_exchange_amount: amount ? amount:10,
                             email: data.email
                         },
                         myCookie: apiKey,
@@ -151,6 +152,7 @@ export function registerAuthTool(server: McpServer ) {
             title:  'Get a wallet and an API_KEY',
             description:  'Create wallet for this email and get API_KEY.',
             inputSchema: CreateAccountInput,
+            annotations: { title: "Get a wallet and an API_KEY", readOnlyHint: true }
         },
         async ({ email }) => {
 
