@@ -1,5 +1,4 @@
 runtime: container
-target: local
 build:
   dockerfile: "Dockerfile"
   dockerBuildPath: "."
