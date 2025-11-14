@@ -1,5 +1,17 @@
-runtime: typescript
-target: local
+runtime: container
+build:
+  dockerfile: "Dockerfile"
+  dockerBuildPath: "."
+startCommand:
+  type: "http"
+  configSchema:
+    type: object
+    required: []
+    properties:
+      apiKey:
+        type: string
+        title: "API Key"
+        description: "API key for P-Link.io"
 env:
   NODE_ENV: "production"
   DEBUG: "true"
