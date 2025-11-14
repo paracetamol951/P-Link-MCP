@@ -32,7 +32,6 @@ const tools: Tool[] = [
         inputSchema: jsonSchema(zodToJsonSchema(z.object(AuthInput))).jsonSchema,
         annotations: { title: login_with_api_key_title, readOnlyHint: true }
     },
-    /*
     {
         name: "fund_my_wallet",
         description: fund_my_wallet_title,
@@ -47,6 +46,7 @@ const tools: Tool[] = [
         inputSchema: jsonSchema(zodToJsonSchema(z.object(getSendMoneyShape))).jsonSchema,
         annotations: { title: send_money_title, readOnlyHint: true }
     },
+    /*
     {
         name: "request_payment_link",
         description: request_payment_link_title,
