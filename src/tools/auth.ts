@@ -4,7 +4,7 @@ import { z, } from 'zod';
 
 import {  resolveAuth, setSessionAuth } from '../context.js';
 import { BASE } from '../support/http.js';
-import { getAPIuser, structData } from '../support/toolsData.js';
+import { getAPIuser, structData, wrapResult } from '../support/toolsData.js';
 
 export const CreateAccountInput = {
     email: z.string().email().describe("Email that will be associated with the wallet. This email can claim the funds on the wallet."),
@@ -16,7 +16,7 @@ export const getFundWalletShape = {
     amount: z.number().positive().default(10).optional().describe("Amount to fund in your wallet in USD"),
 };
 
-export const get_wallet_and_api_key_title = 'Create a wallet on your email. The provided email will be able to claim the funds.';
+export const get_wallet_and_api_key_title = 'Create a wallet for your email or get API_KEY by email for existing wallet.';
 export const login_with_api_key_title = 'Login using API_KEY. Connect to your P-Link wallet using API_KEY';
 export const fund_my_wallet_title = 'Fund wallet : Obtain a link in order to fund your wallet of the desired amount using a credit card, or the Solana address of your wallet if you want to fund your account using Solana.';
 
@@ -120,14 +120,11 @@ export function registerAuthTool(server: McpServer) {
         'get_wallet_and_api_key',
         {
             title: get_wallet_and_api_key_title,
-            description: 'Create wallet for this email and get API_KEY.',
+            description: get_wallet_and_api_key_title,
             inputSchema: CreateAccountInput,
             annotations: { title: get_wallet_and_api_key_title, readOnlyHint: true }
         },
-        async ({ email }) => {
-            const r = get_wallet_and_api_key({ email });
-            return structData(r) as any;
-        }
+        async (e) => await wrapResult(get_wallet_and_api_key, e)
     );
     server.registerTool(
         'login_with_api_key',
@@ -137,10 +134,7 @@ export function registerAuthTool(server: McpServer) {
             inputSchema: AuthInput, // shape
             annotations: { title: login_with_api_key_title, readOnlyHint: true }
         },
-        async ({ API_KEY }) => {
-            const r = login_with_api_key({ API_KEY });
-            return structData(r) as any;
-        }
+        async (e) => await wrapResult(login_with_api_key, e)
     );
     server.registerTool(
         'fund_my_wallet',
@@ -150,12 +144,7 @@ export function registerAuthTool(server: McpServer) {
             inputSchema: getFundWalletShape, // shape
             annotations: { title: fund_my_wallet_title, readOnlyHint: true }
         },
-        async ({ amount } ) => {
-            const r = fund_my_wallet({ amount });
-            return structData(r) as any;
-
-
-        }
+        async (e) => await wrapResult(fund_my_wallet, e)
     );
     
 }

@@ -72,9 +72,25 @@ export async function getAPIuser(apiKey: string) {
         body: JSON.stringify(jsP)
     });
     var dat = await fet.text();
-    process.stderr.write(`[caisse][info] dat2 ${dat}\n`);
+    process.stderr.write(`[caisse][info] APIuser ${dat}\n`);
 
     var result = JSON.parse(dat);
     return result;
+}
+export async function wrapResult(workFunc: (args: any) => object, params: object) {
+    try {
+        const result = await workFunc(params)
+        return structData(result) as any;
+    } catch (error) {
+        return {
+            content: [
+                {
+                    type: "text",
+                    text: `Error: ${error instanceof Error ? error.message : String(error)}`,
+                },
+            ],
+            isError: true,
+        };
+    }
 }
 export const currencyZOD = z.enum(['USD', 'EUR']).optional().default("USD")

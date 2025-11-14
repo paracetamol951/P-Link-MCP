@@ -2,7 +2,7 @@ import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
 import { BASE } from '../support/http.js';
 import {  resolveAuth } from '../context.js';
-import {  structData } from '../support/toolsData.js';
+import {  structData, wrapResult } from '../support/toolsData.js';
 
 export async function pay_and_get_402_protected_url(args: any) {
     const { url } = args;
@@ -41,9 +41,6 @@ export function register402client(server: McpServer ) {
             inputSchema: get402clientShape,
             annotations: { title: auth402_title, destructiveHint: true, openWorldHint: true }
         },
-        async ({ url }) => {
-            const r = pay_and_get_402_protected_url({ url });
-            return structData(r) as any;
-        }
+        async (e) => await wrapResult(pay_and_get_402_protected_url, e)
     );
 }

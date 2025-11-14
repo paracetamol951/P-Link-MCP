@@ -31,7 +31,7 @@ function ensureZodRawShape(
     toolName: string
 ): Record<string, ZodTypeAny> {
     if (isZodRawShape(maybeShape)) return maybeShape;
-    process.stderr.write(`[caisse][patch] ${kind} absent/non-ZodRawShape → {} pour ${toolName}\n`);
+    process.stderr.write(`[P-Link][patch] ${kind} absent/non-ZodRawShape → {} pour ${toolName}\n`);
     return {};
 }
 
@@ -39,14 +39,14 @@ async function main() {
     const envKey = process.env.APIKEY ?? process.env.MCP_APIKEY;
     if (!getSessionAuth() && envKey) {
         setSessionAuth({ ok: true,  APIKEY: envKey, scopes: ['*'] });
-        process.stderr.write('[caisse][auth] Session initialisée depuis variables d’environnement.\n');
+        process.stderr.write('[P-Link][auth] Session initialisée depuis variables d’environnement.\n');
     }
     // --- Logs de contexte ---
     try {
         // @ts-ignore
         const __dir = typeof __dirname !== 'undefined' ? __dirname : '(no __dirname)';
-        process.stderr.write(`[caisse][path] __dirname=${__dir}\n`);
-        process.stderr.write(`[caisse][env] API_BASE=${process.env.API_BASE ?? ''} \n`);
+        process.stderr.write(`[P-Link][path] __dirname=${__dir}\n`);
+        process.stderr.write(`[P-Link][env] API_BASE=${process.env.API_BASE ?? ''} \n`);
     } catch { }
 
     // --- Création du serveur MCP ---
@@ -57,15 +57,12 @@ async function main() {
     
 
     
-
-    // --- Enregistrement des outils métier ---
     try {
-        //registerAuthTools(server);
+        registerAuthTool(server);
         registerPaymentsTools(server);
         register402client(server);
-        registerAuthTool(server);
     } catch (e: any) {
-        process.stderr.write(`[caisse][error] Echec registerXTools: ${e?.stack || e}\n`);
+        process.stderr.write(`[P-Link][error] Echec registerXTools: ${e?.stack || e}\n`);
     }
 
     // --- Tool "ping" minimal (inputSchema sous forme de shape, pas z.object) ---
@@ -86,18 +83,18 @@ async function main() {
     // --- Démarrage en STDIO ---
     const transport = new StdioServerTransport();
     await server.connect(transport);
-    process.stderr.write(`[caisse][info] Server started and connected successfully (stdio)\n`);
+    process.stderr.write(`[P-Link][info] Server started and connected successfully (stdio)\n`);
 }
 
 // --- Garde-fous globaux ---
 process.on('unhandledRejection', (err: any) => {
-    process.stderr.write(`[caisse][fatal] UnhandledRejection: ${err?.stack || err}\n`);
+    process.stderr.write(`[P-Link][fatal] UnhandledRejection: ${err?.stack || err}\n`);
 });
 process.on('uncaughtException', (err: any) => {
-    process.stderr.write(`[caisse][fatal] UncaughtException: ${err?.stack || err}\n`);
+    process.stderr.write(`[P-Link][fatal] UncaughtException: ${err?.stack || err}\n`);
 });
 
 main().catch((e) => {
-    process.stderr.write(`[caisse][fatal] main() failed: ${e?.stack || e}\n`);
+    process.stderr.write(`[P-Link][fatal] main() failed: ${e?.stack || e}\n`);
     process.exit(1);
 });

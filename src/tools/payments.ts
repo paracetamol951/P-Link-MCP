@@ -1,7 +1,7 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
 import {  resolveAuth } from '../context.js';
-import { currencyZOD, getAPIuser,  structData } from '../support/toolsData.js';
+import { currencyZOD, getAPIuser,  structData, wrapResult } from '../support/toolsData.js';
 import { BASE } from '../support/http.js';
 const emailZod = z.string().email();
 const phoneZod = z.string().regex(/^\+?[0-9]{6,15}$/, "Invalid phone number").describe("Phone number (00XX format)");
@@ -80,7 +80,6 @@ export async function send_money(args: any) {
     return result;
 }
 export async function request_payment_link(reqBody: any) {
-    //const { reqBody } = args;
     if (reqBody.title) {
         reqBody.title = reqBody.title.split('\u20AC').join('euro');
     }
@@ -91,13 +90,11 @@ export async function request_payment_link(reqBody: any) {
         if (result.pubk) reqBody.receivingPayment = result.pubk;
 
         if (result.error) {
-            return structData(result);
+            throw new Error(result.error);
         }
     }
     if (!reqBody.receivingPayment) {
-        return structData({
-            error: 'receivingPayment parameter required'
-        });
+        throw new Error('receivingPayment parameter required');
     }
     var req = await fetch(BASE + '/api/createPLink', {
         method: 'POST',
@@ -109,15 +106,15 @@ export async function request_payment_link(reqBody: any) {
 }
 export async function get_my_wallet_info(reqBody: any) {
     var pubk = '';
-    var result = {error:'Not found'}
+    var result = {error:'Not found'} as any
     if (reqBody.pubk) {
         pubk = reqBody.pubk;
+        result = { pubk }
     } else {
         const { apiKey } = resolveAuth(undefined, undefined);
         var jsP = {
             myKey: apiKey
         }
-        process.stderr.write(`[caisse][info] XapiKey ${apiKey}\n`);
         const fet = await fetch(BASE + '/api/getAPIUser', {
             method: 'POST',
             headers: {
@@ -127,15 +124,17 @@ export async function get_my_wallet_info(reqBody: any) {
             body: JSON.stringify(jsP)
         });
         var dat = await fet.text();
-        process.stderr.write(`[caisse][info] dat2 ${dat}\n`);
+
 
         result = JSON.parse(dat);
 
-        pubk = reqBody.pubk;
+        pubk = result.pubk;
     }
     if (pubk) {
-        process.stderr.write(`[caisse][info] fetch wallet infos\n`);
-        const walletInfos = await fetch(BASE + '/api/walletInfos/' + pubk + '/1');
+        const walletInfos = await fetch(BASE + '/api/walletInfos/' + pubk + '/1/'+(new Date().getTime()), {
+            method: 'POST',
+            body: JSON.stringify(reqBody)
+        });
         const walletBalance = await walletInfos.json();
         result = { ...result, ...walletBalance };
         return result;
@@ -175,13 +174,10 @@ export function registerPaymentsTools(server: McpServer) {
         {
             title: send_money_title,
             description: send_money_title,
-            inputSchema: getSendMoneyShape, // ZodRawShape,
+            inputSchema: getSendMoneyShape, 
             annotations: { title: send_money_title, destructiveHint: true, openWorldHint: true }
         },
-        async ({ to, amount, currency, title }) => {
-            const result = send_money({ to, amount, currency, title })
-            return structData(result) as any;
-        }
+        async (e) => await wrapResult(send_money,e)
     );
 
     server.registerTool(
@@ -189,28 +185,20 @@ export function registerPaymentsTools(server: McpServer) {
         {
             title: request_payment_link_title,
             description: request_payment_link_title,
-            inputSchema: getCreatePLinkShape, // ZodRawShape,
+            inputSchema: getCreatePLinkShape, 
             annotations: { title: request_payment_link_title, readOnlyHint: true }
         },
-        async (reqBody) => {
-            const result = request_payment_link(reqBody)
-            return structData(result) as any;
-        }
+        async (e) => await wrapResult(request_payment_link, e)
     );
-        
     server.registerTool(
         'get_wallet_info',
         {
             title: get_my_wallet_info_title,
             description: get_my_wallet_info_title,
-            inputSchema: getGetWalletInfosShape, // ZodRawShape,
+            inputSchema: getGetWalletInfosShape, 
             annotations: { title: get_my_wallet_info_title, readOnlyHint: true }
         },
-        async (reqBody) => {
-
-            const result = get_my_wallet_info(reqBody)
-            return structData(result) as any;
-        }
+        async (e) => await wrapResult(get_my_wallet_info, e)
     );
         
     server.registerTool(
@@ -218,13 +206,10 @@ export function registerPaymentsTools(server: McpServer) {
         {
             title: get_transaction_state_title,
             description: get_transaction_state_title,
-            inputSchema: getGetTrxStateShape, // ZodRawShape,
+            inputSchema: getGetTrxStateShape, 
             annotations: { title: get_transaction_state_title,readOnlyHint: true }
         },
-        async ({ trxID }) => {
-            const result = get_transaction_state({ trxID })
-            return structData(result) as any;
-        }
+        async (e) => await wrapResult(get_transaction_state, e)
     );
     
     server.registerTool(
@@ -232,12 +217,9 @@ export function registerPaymentsTools(server: McpServer) {
         {
             title: get_wallet_history_title,
             description: get_wallet_history_title,
-            inputSchema: getWalletHistoryShape, // ZodRawShape,
+            inputSchema: getWalletHistoryShape, 
             annotations: { title: get_wallet_history_title, readOnlyHint: true }
         },
-        async (param) => {
-            const result = get_wallet_history(param)
-            return structData(result) as any;
-        }
+        async (e) => await wrapResult(get_wallet_history, e)
     );
 }

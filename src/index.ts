@@ -76,9 +76,9 @@ app.post('/mcp', async (req, res, next) => {
 // Ton serveur MCP — ajoute ici tes tools/resources/prompts
 const mcpServer = createPLinkMCPserver();
 
+registerAuthTool(mcpServer);
 registerPaymentsTools(mcpServer);
 register402client(mcpServer);
-registerAuthTool(mcpServer);
 
 // Map sessionId -> transport
 const transports: Map<string, StreamableHTTPServerTransport> = new Map();
