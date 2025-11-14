@@ -44,7 +44,7 @@ export function register402client(server: McpServer ) {
             annotations: { title: 'Pay 402 link', destructiveHint: true, openWorldHint: true }
         },
         async ({ url }) => {
-            const r = pay_and_get_402_protected_url(url);
+            const r = pay_and_get_402_protected_url({ url });
             return structData(r) as any;
         }
     );

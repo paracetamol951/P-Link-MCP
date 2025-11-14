@@ -14,6 +14,8 @@ import { z } from "zod";
 import { auth402_title, pay_and_get_402_protected_url, get402clientShape } from "./tools/402client.js";
 
 import { zodToJsonSchema } from "zod-to-json-schema";
+import { get_wallet_and_api_key_title, CreateAccountInput, login_with_api_key, AuthInput, login_with_api_key_title, fund_my_wallet, fund_my_wallet_title, get_wallet_and_api_key } from './tools/auth.js';
+import { getGetUserShape, send_money, getSendMoneyShape, send_money_title, request_payment_link, getCreatePLinkShape, request_payment_link_title, get_my_wallet_info, get_my_wallet_info_title, get_transaction_state, getGetTrxStateShape, get_transaction_state_title, get_wallet_history, getWalletHistoryShape, get_wallet_history_title } from './tools/payments.js';
 
 // Tool definitions
 const tools: Tool[] = [
@@ -24,6 +26,56 @@ const tools: Tool[] = [
         annotations: { title: 'Pay 402 link', destructiveHint: true, openWorldHint: true }
     },
 
+    {
+        name: "get_wallet_and_api_key",
+        description: get_wallet_and_api_key_title,
+        inputSchema: jsonSchema(zodToJsonSchema(z.object(CreateAccountInput))).jsonSchema,
+        annotations: { title: get_wallet_and_api_key_title, readOnlyHint: true }
+    },
+    {
+        name: "login_with_api_key",
+        description: login_with_api_key_title,
+        inputSchema: jsonSchema(zodToJsonSchema(z.object(AuthInput))).jsonSchema,
+        annotations: { title: login_with_api_key_title, readOnlyHint: true }
+    },
+    {
+        name: "fund_my_wallet",
+        description: fund_my_wallet_title,
+        inputSchema: jsonSchema(zodToJsonSchema(z.object(getGetUserShape))).jsonSchema,
+        annotations: { title: fund_my_wallet_title, readOnlyHint: true }
+    },
+
+
+    {
+        name: "send_money",
+        description: send_money_title,
+        inputSchema: jsonSchema(zodToJsonSchema(z.object(getSendMoneyShape))).jsonSchema,
+        annotations: { title: send_money_title, readOnlyHint: true }
+    },
+    {
+        name: "request_payment_link",
+        description: request_payment_link_title,
+        inputSchema: jsonSchema(zodToJsonSchema(z.object(getCreatePLinkShape))).jsonSchema,
+        annotations: { title: request_payment_link_title, readOnlyHint: true }
+    },
+    {
+        name: "get_my_wallet_info",
+        description: get_my_wallet_info_title,
+        inputSchema: jsonSchema(zodToJsonSchema(z.object(getGetUserShape))).jsonSchema,
+        annotations: { title: get_my_wallet_info_title, readOnlyHint: true }
+    },
+    {
+        name: "get_transaction_state",
+        description: get_transaction_state_title,
+        inputSchema: jsonSchema(zodToJsonSchema(z.object(getGetTrxStateShape))).jsonSchema,
+        annotations: { title: get_transaction_state_title, readOnlyHint: true }
+    },
+    {
+        name: "get_wallet_history",
+        description: get_wallet_history_title,
+        inputSchema: jsonSchema(zodToJsonSchema(z.object(getWalletHistoryShape))).jsonSchema,
+        annotations: { title: get_wallet_history_title, readOnlyHint: true }
+    },
 ];
 
 
@@ -67,15 +119,37 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         let result;
 
         switch (name) {
+
+            case "get_wallet_and_api_key":
+                result = await get_wallet_and_api_key(args);
+                break;
+            case "login_with_api_key":
+                result = await login_with_api_key(args);
+                break;
+            case "fund_my_wallet":
+                result = await fund_my_wallet(args);
+                break;
+
+            case "send_money":
+                result = await send_money(args);
+                break;
+            case "request_payment_link":
+                result = await request_payment_link(args);
+                break;
+            case "get_my_wallet_info":
+                result = await get_my_wallet_info();
+                break;
+            case "get_transaction_state":
+                result = await get_transaction_state(args);
+                break;
+            case "get_wallet_history":
+                result = await get_wallet_history(args);
+                break;
+
             case "pay_and_get_402_protected_url":
                 result = await pay_and_get_402_protected_url(args);
                 break;
-            /*case "import_wallet":
-                result = await handleImportWallet(args);
-                break;
-            case "list_wallets":
-                result = await handleListWallets();
-                break;*/
+
             default:
                 throw new Error(`Unknown tool: ${name}`);
         }
