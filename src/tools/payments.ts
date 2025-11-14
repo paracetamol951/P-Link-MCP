@@ -3,9 +3,20 @@ import { z } from 'zod';
 import {  resolveAuth } from '../context.js';
 import { currencyZOD, getAPIuser,  structData } from '../support/toolsData.js';
 import { BASE } from '../support/http.js';
+const emailZod = z.string().email();
+const phoneZod = z.string().regex(/^\+?[0-9]{6,15}$/, "Invalid phone number").describe("Phone number (00XX format)");
+const solAddressZod = z.string().regex(/^[1-9A-HJ-NP-Za-km-z]{32,44}$/, "Invalid Solana address").describe("Solana wallet address");
+const recipientZod = z.union([emailZod, phoneZod, solAddressZod]).describe(
+    "Email, phone number or wallet address"
+);
+const toZod = z.union([
+    recipientZod,
+    z.array(recipientZod).nonempty()
+]).describe("One or multiple recipients");
+
 
 export const getSendMoneyShape = {
-    to: z.string().describe("Email, phone or Solana wallet"),
+    to: toZod,
     amount: z.number().positive().describe("Amount to send"),
     currency: currencyZOD.describe("Currency of specified amount to send"),
     title: z.string().optional().describe("A title for the transaction shown to the receiver")
@@ -43,10 +54,16 @@ export async function send_money(args: any) {
 
     var jsP = {
         myKey: apiKey,
-        to,
+        to:'',
         amount,
         currencyUsed: currency,
-        title
+        title,
+        destList:null
+    }
+    if (typeof to == "string") jsP.to = to;
+    else {
+        jsP.to = to[0];
+        jsP.destList = to.join(';');
     }
     const fet = await fetch(BASE + '/api/tr4usr', {
         method: 'POST',
