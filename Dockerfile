@@ -36,10 +36,10 @@ COPY package.json package-lock.json* ./
 RUN npm ci --omit=dev
 
 # Copie des artefacts buildés + fichiers utiles (manifest, locales…)
-COPY --from=builder /app/build ./build
-COPY --from=builder /app/manifest.*.json /app/manifest.template.json ./
-COPY --from=builder /app/locales ./locales
-COPY --from=builder /app/scripts ./scripts
+#COPY --from=builder /app/build ./build
+#COPY --from=builder /app/manifest.*.json /app/manifest.template.json ./
+#COPY --from=builder /app/locales ./locales
+#COPY --from=builder /app/scripts ./scripts
 
 # (Optionnel) Générer le manifest final au démarrage
 # RUN npm run generate:manifest
