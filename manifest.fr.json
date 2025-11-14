@@ -57,7 +57,7 @@
       "description": "Create a payment link in order to request a payment to your account"
     },
     {
-      "name": "get_my_wallet_info",
+      "name": "get_wallet_info",
       "description": "Retrieve the wallet infos about the connected P-Link account (Solana wallet address, Balance)"
     },
     {

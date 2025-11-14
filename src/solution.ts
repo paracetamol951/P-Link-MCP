@@ -14,8 +14,9 @@ import { z } from "zod";
 import { auth402_title, pay_and_get_402_protected_url, get402clientShape } from "./tools/402client.js";
 
 import { zodToJsonSchema } from "zod-to-json-schema";
-import { get_wallet_and_api_key_title, CreateAccountInput, login_with_api_key, AuthInput, login_with_api_key_title, fund_my_wallet, fund_my_wallet_title, get_wallet_and_api_key } from './tools/auth.js';
-import { getGetUserShape, send_money, getSendMoneyShape, send_money_title, request_payment_link, getCreatePLinkShape, request_payment_link_title, get_my_wallet_info, get_my_wallet_info_title, get_transaction_state, getGetTrxStateShape, get_transaction_state_title, get_wallet_history, getWalletHistoryShape, get_wallet_history_title } from './tools/payments.js';
+import { get_wallet_and_api_key_title, CreateAccountInput, login_with_api_key, AuthInput, login_with_api_key_title, fund_my_wallet, fund_my_wallet_title, get_wallet_and_api_key, getFundWalletShape } from './tools/auth.js';
+import { send_money, getSendMoneyShape, send_money_title, request_payment_link, getCreatePLinkShape, request_payment_link_title, get_my_wallet_info, get_my_wallet_info_title, get_transaction_state, getGetTrxStateShape, get_transaction_state_title, get_wallet_history, getWalletHistoryShape, get_wallet_history_title, getGetWalletInfosShape } from './tools/payments.js';
+import { serverJsonInfos } from './support/mcp.js';
 
 // Tool definitions
 const tools: Tool[] = [
@@ -35,7 +36,7 @@ const tools: Tool[] = [
     {
         name: "fund_my_wallet",
         description: fund_my_wallet_title,
-        inputSchema: jsonSchema(zodToJsonSchema(z.object(getGetUserShape))).jsonSchema,
+        inputSchema: jsonSchema(zodToJsonSchema(z.object(getFundWalletShape))).jsonSchema,
         annotations: { title: fund_my_wallet_title, readOnlyHint: true }
     },
 
@@ -52,11 +53,10 @@ const tools: Tool[] = [
         inputSchema: jsonSchema(zodToJsonSchema(z.object(getCreatePLinkShape))).jsonSchema,
         annotations: { title: request_payment_link_title, readOnlyHint: true }
     },
-    /*
     {
-        name: "get_my_wallet_info",
+        name: "get_wallet_info",
         description: get_my_wallet_info_title,
-        inputSchema: jsonSchema(zodToJsonSchema(z.object(getGetUserShape))).jsonSchema,
+        inputSchema: jsonSchema(zodToJsonSchema(z.object(getGetWalletInfosShape))).jsonSchema,
         annotations: { title: get_my_wallet_info_title, readOnlyHint: true }
     },
     {
@@ -76,16 +76,12 @@ const tools: Tool[] = [
         description: auth402_title,
         inputSchema: jsonSchema(zodToJsonSchema(z.object(get402clientShape))).jsonSchema,
         annotations: { title: 'Pay 402 link', destructiveHint: true, openWorldHint: true }
-    }*/
+    }
 ];
 
 
 // Main server setup
-const server = new Server(
-    {
-        name: "solana-mcp-server",
-        version: "1.0.0",
-    },
+const server = new Server(serverJsonInfos,
     {
         capabilities: {
             tools: {},
@@ -137,8 +133,8 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
             case "request_payment_link":
                 result = await request_payment_link(args);
                 break;
-            case "get_my_wallet_info":
-                result = await get_my_wallet_info();
+            case "get_wallet_info":
+                result = await get_my_wallet_info(args);
                 break;
             case "get_transaction_state":
                 result = await get_transaction_state(args);

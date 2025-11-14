@@ -23,12 +23,17 @@ export const getCreatePLinkShape = {
     webhook: z.string().optional().describe("HTTP webhook to call on payment success"),
     notificationEmail: z.string().optional().describe("Email to notify on payment success")
 };
-export const getGetUserShape = {};
+/*export const getGetUserShape = {
+    API_KEY: z.string().describe("API_KEY of the account you want to see. If not provided, shows details about the currently connected account"),
+};*/
+export const getGetWalletInfosShape = {
+    pubk: z.string().optional().describe("The Solana address of the wallet you want to see, if not provided, uses the currently connected user wallet address.")
+};
 export const getGetTrxStateShape = {
     trxID: z.string().optional().describe("The transaction ID")
 };
 export const getWalletHistoryShape = {
-    walletAddress: z.string().optional().describe("The wallet address")
+    walletAddress: z.string().optional().describe("The Solana address of the wallet you want to see, if not provided, uses the currently connected user wallet address.")
 };
 
 export async function send_money(args: any) {
@@ -85,32 +90,41 @@ export async function request_payment_link(reqBody: any) {
 
     return plink_Info;
 }
-export async function get_my_wallet_info() {
-    const { apiKey } = resolveAuth(undefined, undefined);
-    var jsP = {
-        myKey: apiKey
+export async function get_my_wallet_info(reqBody: any) {
+    var pubk = '';
+    var result = {error:'Not found'}
+    if (reqBody.pubk) {
+        pubk = reqBody.pubk;
+    } else {
+        const { apiKey } = resolveAuth(undefined, undefined);
+        var jsP = {
+            myKey: apiKey
+        }
+        process.stderr.write(`[caisse][info] XapiKey ${apiKey}\n`);
+        const fet = await fetch(BASE + '/api/getAPIUser', {
+            method: 'POST',
+            headers: {
+                Accept: 'application.json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(jsP)
+        });
+        var dat = await fet.text();
+        process.stderr.write(`[caisse][info] dat2 ${dat}\n`);
+
+        result = JSON.parse(dat);
+
+        pubk = reqBody.pubk;
     }
-    process.stderr.write(`[caisse][info] XapiKey ${apiKey}\n`);
-    const fet = await fetch(BASE + '/api/getAPIUser', {
-        method: 'POST',
-        headers: {
-            Accept: 'application.json',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(jsP)
-    });
-    var dat = await fet.text();
-    process.stderr.write(`[caisse][info] dat2 ${dat}\n`);
-
-    var result = JSON.parse(dat);
-
-    if (result?.pubk) {
+    if (pubk) {
         process.stderr.write(`[caisse][info] fetch wallet infos\n`);
-        const walletInfos = await fetch(BASE + '/api/walletInfos/' + result.pubk + '/1');
+        const walletInfos = await fetch(BASE + '/api/walletInfos/' + pubk + '/1');
         const walletBalance = await walletInfos.json();
         result = { ...result, ...walletBalance };
+        return result;
     }
-    return result;
+    throw Error("Not found");
+    //return result;
 }
 export async function get_transaction_state(args: any) {
     const { trxID } = args;
@@ -168,16 +182,16 @@ export function registerPaymentsTools(server: McpServer) {
     );
         
     server.registerTool(
-        'get_my_wallet_info',
+        'get_wallet_info',
         {
             title: get_my_wallet_info_title,
             description: get_my_wallet_info_title,
-            inputSchema: getGetUserShape, // ZodRawShape,
+            inputSchema: getGetWalletInfosShape, // ZodRawShape,
             annotations: { title: get_my_wallet_info_title, readOnlyHint: true }
         },
         async (reqBody) => {
 
-            const result = get_my_wallet_info()
+            const result = get_my_wallet_info(reqBody)
             return structData(result) as any;
         }
     );

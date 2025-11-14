@@ -12,7 +12,7 @@ export const CreateAccountInput = {
 export const AuthInput = {
     API_KEY: z.string().describe("API_KEY in order to access your account. You can receive your temporary API_KEY by email or get it on https://p-link.io"),
 } ;
-export const getGetUserShape = {
+export const getFundWalletShape = {
     amount: z.number().positive().default(10).optional().describe("Amount to fund in your wallet in USD"),
 };
 
@@ -147,7 +147,7 @@ export function registerAuthTool(server: McpServer) {
         {
             title: fund_my_wallet_title,
             description: fund_my_wallet_title,
-            inputSchema: getGetUserShape, // shape
+            inputSchema: getFundWalletShape, // shape
             annotations: { title: fund_my_wallet_title, readOnlyHint: true }
         },
         async ({ amount } ) => {

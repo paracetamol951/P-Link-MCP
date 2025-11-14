@@ -8,6 +8,7 @@ import { registerPaymentsTools } from './tools/payments.js';
 import { register402client } from './tools/402client.js';
 import { registerAuthTool } from './tools/auth.js';
 import { initStore } from './support/store.js';
+import { createPLinkMCPserver } from './support/mcp.js';
 
 (async () => {
     await initStore(); // démarre redis OU fallback
@@ -38,37 +39,7 @@ app.use(express.json());
 // Types utilitaires
 type BearerValidatorResult = { apiKey: string };
 
-// Middleware d'auth pour POST /mcp : on LAISSE PASSER la méthode "initialize" sans auth.
-// Pour toutes les autres méthodes (tools/resources/etc.), on exige Bearer OU x-api-key.
-// (extrait)
-/*app.post('/mcp', async (req, res, next) => {
-    try {
-        console.log('isInitialize');
-        const isInitialize = (req.body as any)?.method === 'initialize';
-        if (isInitialize) return next();
 
-        // 1) OAuth Bearer
-        const authHeader = req.get('authorization') || '';
-        try {
-            const { apiKey } = await bearerValidator(authHeader);
-            setSessionAuth({ ok: true, APIKEY: apiKey, scopes: ['mcp:invoke', 'shop:read'] });
-            return next();
-        } catch {  }
-
-        // 2) Fallback X-API-KEY
-        const apiKey = req.get('x-api-key') ?? req.get('x-apikey');
-        if (apiKey) {
-            setSessionAuth({ ok: true, APIKEY: apiKey, scopes: ['*'] });
-            return next();
-        }
-
-        return next();  // ← passe quand même (même sans auth)
-    } catch (e) {
-        const detail = e instanceof Error ? e.message : 'invalid token';
-        console.log(e);
-        return res.status(401).json({ error: 'unauthorized', detail }); // ← 401 ici
-    }
-});*/
 
 app.post('/mcp', async (req, res, next) => {
     try {
@@ -103,10 +74,7 @@ app.post('/mcp', async (req, res, next) => {
 
 
 // Ton serveur MCP — ajoute ici tes tools/resources/prompts
-const mcpServer = new McpServer({
-    name: 'p-link',
-    version: '0.0.1',
-});
+const mcpServer = createPLinkMCPserver();
 
 registerPaymentsTools(mcpServer);
 register402client(mcpServer);

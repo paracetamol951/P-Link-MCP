@@ -10,6 +10,7 @@ import { setSessionAuth, getSessionAuth } from './context.js';
 import { registerPaymentsTools } from './tools/payments.js';
 import { register402client } from './tools/402client.js';
 import { registerAuthTool } from './tools/auth.js';
+import { createPLinkMCPserver } from './support/mcp.js';
 
 // ==== Session globale (STDIO: une seule connexion) ====
 type AuthState = { ok: boolean;  APIKEY?: string; scopes?: string[] };
@@ -49,10 +50,7 @@ async function main() {
     } catch { }
 
     // --- Création du serveur MCP ---
-    const server = new McpServer({
-        name: 'p-link',
-        version: '0.0.1',
-    });
+    const server = createPLinkMCPserver();
     // --- Guard inline: protège tous les tools sauf whitelist ---
     //type Ctx = { auth?: { ok: boolean; user?: string;  scopes?: string[] } };
     // Wrap de registerTool
