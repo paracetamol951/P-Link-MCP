@@ -28,7 +28,7 @@ export async function pay_and_get_402_protected_url(args: any) {
 export const auth402_title = "Pay a HTTP 402 protected URL using your P-Link managed account, and returns the result";
 
 export const get402clientShape = {
-        url: z.string().describe("The 402 protected URL")
+        url: z.string().describe("The 402 protected URL (can be any link complying to the x402 protocol)")
     } ;
 
 export function register402client(server: McpServer ) {

@@ -17,8 +17,8 @@ export const getGetUserShape = {
 };
 
 export const get_wallet_and_api_key_title = 'Create a wallet on your email. The provided email will be able to claim the funds.';
-export const login_with_api_key_title = 'Login using API_KEY. Connect to your P-Link account using API_KEY';
-export const fund_my_wallet_title = 'Get the different ways in order to fund your wallet';
+export const login_with_api_key_title = 'Login using API_KEY. Connect to your P-Link wallet using API_KEY';
+export const fund_my_wallet_title = 'Fund wallet : Obtain a link in order to fund your wallet of the desired amount using a credit card, or the Solana address of your wallet if you want to fund your account using Solana.';
 
 export async function get_wallet_and_api_key(args: any)  {
     const { email } = args;
