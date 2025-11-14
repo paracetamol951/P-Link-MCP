@@ -46,13 +46,13 @@ const tools: Tool[] = [
         inputSchema: jsonSchema(zodToJsonSchema(z.object(getSendMoneyShape))).jsonSchema,
         annotations: { title: send_money_title, readOnlyHint: true }
     },
-    /*
     {
         name: "request_payment_link",
         description: request_payment_link_title,
         inputSchema: jsonSchema(zodToJsonSchema(z.object(getCreatePLinkShape))).jsonSchema,
         annotations: { title: request_payment_link_title, readOnlyHint: true }
     },
+    /*
     {
         name: "get_my_wallet_info",
         description: get_my_wallet_info_title,
