@@ -13,12 +13,19 @@ build:
 
 startCommand:
   type: stdio
-  configSchema: {}
+  configSchema: 
+    type: object
+    required: []
+    properties:
+      API_KEY:
+        type: string
+        title: "P-Link API Key"
+        description: "API key for P-Link.io account (optional, can be obtained using the MCP tools)"
   commandFunction: |
     (config) => {
       return {
         command: "node",
-        args: ["dist/smithery.js"],
+        args: ["dist/stdio.js"],
         env: {}
       };
     }

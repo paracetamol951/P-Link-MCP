@@ -174,7 +174,12 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         };
     }
 });
-
+export const configSchema = z.object({
+    API_KEY: z
+        .string()
+        .default('')
+        .describe("API_KEY from P-Link.io [optional, you can get API_KEY using the MCP tools]"),
+})
 // Export for Smithery
 export default function createServer({ config }: { config?: any }): Server {
     return server;
