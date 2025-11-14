@@ -7,7 +7,12 @@ import oauthRouter, { bearerValidator } from './support/oauth.js';
 import { registerPaymentsTools } from './tools/payments.js';
 import { register402client } from './tools/402client.js';
 import { registerAuthTool } from './tools/auth.js';
+import { initStore } from './support/store.js';
 
+(async () => {
+    await initStore(); // démarre redis OU fallback
+    // puis démarrage du serveur MCP
+})();
 const app = express();
 
 // Monte /.well-known, /oauth/*

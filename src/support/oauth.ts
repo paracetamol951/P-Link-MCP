@@ -11,7 +11,6 @@ import { saveClient, getClient, clientExists, type OAuthClient } from './oauth-c
 import express, { type Application, type Request, type Response, NextFunction } from 'express';
 import fs from 'fs';
 import path from 'path';
-import { t, getLang } from '../i18n/index.js';
 import { fileURLToPath } from 'url';
 
 

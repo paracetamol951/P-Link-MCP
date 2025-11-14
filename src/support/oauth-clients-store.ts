@@ -1,4 +1,4 @@
-import { redis } from './redis.js';
+import { store } from './store.js';
 
 const NS = (process.env.REDIS_NAMESPACE || 'mcp:oauth') + ':clients';
 
@@ -11,27 +11,27 @@ export type OAuthClient = {
 };
 
 export async function saveClient(clientId: string, data: OAuthClient) {
-    await redis.multi()
+    await store.multi()
         .set(key(clientId), JSON.stringify(data))
         .sadd(listKey(), clientId)
         .exec();
 }
 
 export async function getClient(clientId: string): Promise<OAuthClient | undefined> {
-    const raw = await redis.get(key(clientId));
+    const raw = await store.get(key(clientId));
     return raw ? JSON.parse(raw) as OAuthClient : undefined;
 }
 
 export async function clientExists(clientId: string) {
-    return !!(await redis.exists(key(clientId)));
+    return !!(await store.exists(key(clientId)));
 }
 
 export async function listClients(): Promise<string[]> {
-    return await redis.smembers(listKey());
+    return await store.smembers(listKey());
 }
 
 export async function deleteClient(clientId: string) {
-    await redis.multi()
+    await store.multi()
         .del(key(clientId))
         .srem(listKey(), clientId)
         .exec();

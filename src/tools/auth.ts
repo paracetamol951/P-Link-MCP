@@ -134,7 +134,7 @@ export function registerAuthTool(server: McpServer) {
                     var callParams = {
                         transaction_details: {
                             source_currency: "usd",
-                            destination_exchange_amount: amount ? amount:10,
+                            exchange_amount_in_USD: amount ? amount:10,
                             email: data.email
                         },
                         myCookie: apiKey,

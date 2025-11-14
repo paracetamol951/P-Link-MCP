@@ -1,40 +1,33 @@
-﻿// src/support/redis.ts
-import { Redis } from 'ioredis';
+﻿import { Redis } from "ioredis";
 
 const url = process.env.REDIS_URL || 'redis://127.0.0.1:6379';
 
 export const redis = new Redis(url, {
-    // ⚠️ augmente (ou neutralise) la limite par requête pendant le boot
-    maxRetriesPerRequest: 3, // ou un nombre plus grand, ex. 20
-    enableReadyCheck: true,
-    // meilleure stratégie de reconnexion
-    retryStrategy(times) {
-        const delay = Math.min(1000 * Math.pow(2, times), 15000);
-        return delay; // ms (retente indéfiniment)
-    },
-    connectTimeout: 10000,
-    lazyConnect: true, // on appelle .connect() explicitement
+    lazyConnect: true,     // n’essaie PAS de se connecter automatiquement
+    enableReadyCheck: false,
+    maxRetriesPerRequest: 0,
+    retryStrategy: () => null,  // désactive TOUTE reconnexion
+    connectTimeout: 500,
+});
+
+// IMPORTANT : ignorer toute erreur AVANT qu’on décide si on utilise Redis
+redis.on("error", () => {
+    // ne RIEN afficher et ne rien throw ici
+    // l’erreur de connexion sera gérée dans initStore()
 });
 
 function errMsg(e: unknown) {
-    if (!e) return '(unknown)';
-    if (typeof e === 'string') return e;
-    const any = e as any;
-    return any?.message || JSON.stringify(any);
+    if (!e) return "(unknown)";
+    if (typeof e === "string") return e;
+    return (e as any)?.message || JSON.stringify(e);
 }
 
-redis.on('connect', () => process.stderr.write('[redis] connect\n'));
-redis.on('ready', () => process.stderr.write('[redis] ready\n'));
-redis.on('error', (e: unknown) => {
-    const msg = e && typeof e === 'object' && 'message' in (e as any) ? (e as any).message : String(e);
-    process.stderr.write(`[redis][error] ${msg}\n`);
-});
 export async function connectRedis() {
     try {
-        await redis.connect();
-        process.stderr.write('[redis] connected (await)\n');
+        await redis.connect();     // essaie UNE fois
+        console.error("[redis] connected");
     } catch (e) {
-        process.stderr.write(`[redis][fatal] connect failed: ${errMsg(e)}\n`);
+        console.error("[redis] connect failed:", errMsg(e));
         throw e;
     }
 }
