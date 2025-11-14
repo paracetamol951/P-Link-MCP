@@ -40,13 +40,13 @@ const tools: Tool[] = [
     },
 
 
+    /*
     {
         name: "send_money",
         description: send_money_title,
         inputSchema: jsonSchema(zodToJsonSchema(z.object(getSendMoneyShape))).jsonSchema,
         annotations: { title: send_money_title, readOnlyHint: true }
     },
-    /*
     {
         name: "request_payment_link",
         description: request_payment_link_title,
