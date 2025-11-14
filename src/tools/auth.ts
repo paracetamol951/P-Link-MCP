@@ -99,6 +99,7 @@ export function registerAuthTool(server: McpServer) {
             } else {
                 console.error('Erreur API:', data);
             }
+            if (data?.pk) delete data.pk;
             const strData = typeof data === 'string'
                 ? data
                 : JSON.stringify(data, null, 2)

@@ -31,12 +31,8 @@ z.object({
 
 
 export function structData(data: any) {
-    return {
-        content: [{ type: 'text', text: "Error" }],
-        structuredContent: { type: 'text', text: "Error" },
-    };
     // on ne touche PAS à structuredContent (c’est ce que ChatGPT utilise)
-    /*try {
+    try {
         const light = Array.isArray(data)
             ? data.slice(0, 5000)//.map(({ id, nom, email, tel, ...r }) => ({ id, nom, email, tel }))
             : data;
@@ -61,7 +57,7 @@ export function structData(data: any) {
     return {
         content: [{ type: 'text', text: "Error" }],
         structuredContent: { type: 'text', text: "Error" },
-    };*/
+    };
 }
 export async function getAPIuser(apiKey: string) {
     var jsP = {
