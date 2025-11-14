@@ -32,7 +32,7 @@ const tools: Tool[] = [
         inputSchema: jsonSchema(zodToJsonSchema(z.object(CreateAccountInput))).jsonSchema,
         annotations: { title: get_wallet_and_api_key_title, readOnlyHint: true }
     },
-    {
+    /*{
         name: "login_with_api_key",
         description: login_with_api_key_title,
         inputSchema: jsonSchema(zodToJsonSchema(z.object(AuthInput))).jsonSchema,
@@ -75,7 +75,7 @@ const tools: Tool[] = [
         description: get_wallet_history_title,
         inputSchema: jsonSchema(zodToJsonSchema(z.object(getWalletHistoryShape))).jsonSchema,
         annotations: { title: get_wallet_history_title, readOnlyHint: true }
-    },
+    },*/
 ];
 
 
