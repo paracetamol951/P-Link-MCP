@@ -16,8 +16,8 @@ export const getGetUserShape = {
     amount: z.number().positive().default(10).optional().describe("Amount to fund in your wallet in USD"),
 };
 
-export const get_wallet_and_api_key_title = 'Get a wallet and an API_KEY';
-export const login_with_api_key_title = 'Login using API_KEY';
+export const get_wallet_and_api_key_title = 'Create a wallet on your email. The provided email will be able to claim the funds.';
+export const login_with_api_key_title = 'Login using API_KEY. Connect to your P-Link account using API_KEY';
 export const fund_my_wallet_title = 'Get the different ways in order to fund your wallet';
 
 export async function get_wallet_and_api_key(args: any)  {

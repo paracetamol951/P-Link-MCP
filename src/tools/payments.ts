@@ -57,8 +57,8 @@ export async function send_money(args: any) {
     var result = JSON.parse(dat);
     return result;
 }
-export async function request_payment_link(args: any) {
-    const { reqBody } = args;
+export async function request_payment_link(reqBody: any) {
+    //const { reqBody } = args;
     if (reqBody.title) {
         reqBody.title = reqBody.title.split('\u20AC').join('euro');
     }
