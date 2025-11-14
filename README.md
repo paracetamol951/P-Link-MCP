@@ -5,7 +5,7 @@
 [![Live Demo](https://img.shields.io/badge/Demo-online-brightgreen.svg)](https://youtu.be/MTsc_nKiofw)
 [![GitHub Stars](https://img.shields.io/github/stars/paracetamol951/P-Link-MCP?style=social)](https://github.com/paracetamol951/P-Link-MCP/stargazers)
 
-[![P-Link MCP and 402](./P-Link_MCP.png)](https://youtu.be/sw9ASYZHEzY)
+[![P-Link MCP and 402](https://github.com/paracetamol951/P-Link-MCP/blob/main/P-Link_MCP.png)](https://youtu.be/sw9ASYZHEzY)
 
 **P-Link MCP Server** is a server compliant with the **MCP (Model Context Protocol)**, integrating fetch-402 client from coinbase, and HTTP 402 protocol on server side, allowing ChatGPT, Claude, and other MCP-compatible clients to connect to a **payment system** on Solana.
 
@@ -19,7 +19,7 @@ It provides a simple interface to:
 
 > 🟢 Live Server: [https://mcp.p-link.io](https://mcp.p-link.io)
 
-[![P-Link MCP and 402](./doc/PresentationVideoThumb.jpg)](https://youtu.be/sw9ASYZHEzY)
+[![P-Link MCP and 402](https://github.com/paracetamol951/P-Link-MCP/blob/main/doc/PresentationVideoThumb.jpg)](https://youtu.be/sw9ASYZHEzY)
 
 ---
 
@@ -179,7 +179,7 @@ APIKEY=XXXXXXXXXXXXXX
 
 ## Demo video
 
-[![Demo video](./doc/DemoThumb.jpg)](https://youtu.be/MTsc_nKiofw)
+[![Demo video](https://github.com/paracetamol951/P-Link-MCP/blob/main/doc/DemoThumb.jpg)](https://youtu.be/MTsc_nKiofw)
 
 ---
 

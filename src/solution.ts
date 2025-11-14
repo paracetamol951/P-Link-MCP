@@ -46,6 +46,7 @@ const tools: Tool[] = [
         inputSchema: jsonSchema(zodToJsonSchema(z.object(getSendMoneyShape))).jsonSchema,
         annotations: { title: send_money_title, readOnlyHint: true }
     },
+    /*
     {
         name: "request_payment_link",
         description: request_payment_link_title,
@@ -75,7 +76,7 @@ const tools: Tool[] = [
         description: auth402_title,
         inputSchema: jsonSchema(zodToJsonSchema(z.object(get402clientShape))).jsonSchema,
         annotations: { title: 'Pay 402 link', destructiveHint: true, openWorldHint: true }
-    }
+    }*/
 ];
 
 
