@@ -7,13 +7,13 @@ import { BASE } from '../support/http.js';
 import { getAPIuser, structData } from '../support/toolsData.js';
 
 export const CreateAccountInput = {
-    email: z.string().email(),
+    email: z.string().email().describe("Email that will be associated with the wallet. This email can claim the funds on the wallet."),
 };
 export const AuthInput = {
-    API_KEY: z.string(),
+    API_KEY: z.string().describe("API_KEY in order to access your account. You can receive your temporary API_KEY by email or get it on https://p-link.io"),
 } ;
 export const getGetUserShape = {
-    amount: z.number().positive().default(10).optional(),
+    amount: z.number().positive().default(10).optional().describe("Amount to fund in your wallet in USD"),
 };
 
 export const get_wallet_and_api_key_title = 'Get a wallet and an API_KEY';

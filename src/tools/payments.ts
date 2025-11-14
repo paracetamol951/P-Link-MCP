@@ -1,7 +1,7 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
-import { z, ZodTypeAny } from 'zod';
-import { type Ctx, resolveAuth } from '../context.js';
-import { currencyZOD, getAPIuser, InferFromShape, structData } from '../support/toolsData.js';
+import { z } from 'zod';
+import {  resolveAuth } from '../context.js';
+import { currencyZOD, getAPIuser,  structData } from '../support/toolsData.js';
 import { BASE } from '../support/http.js';
 
 export const getSendMoneyShape = {

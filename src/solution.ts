@@ -19,12 +19,6 @@ import { getGetUserShape, send_money, getSendMoneyShape, send_money_title, reque
 
 // Tool definitions
 const tools: Tool[] = [
-    {
-        name: "pay_and_get_402_protected_url",
-        description: auth402_title,
-        inputSchema: jsonSchema(zodToJsonSchema(z.object(get402clientShape))).jsonSchema,
-        annotations: { title: 'Pay 402 link', destructiveHint: true, openWorldHint: true }
-    },
 
     {
         name: "get_wallet_and_api_key",
@@ -32,7 +26,7 @@ const tools: Tool[] = [
         inputSchema: jsonSchema(zodToJsonSchema(z.object(CreateAccountInput))).jsonSchema,
         annotations: { title: get_wallet_and_api_key_title, readOnlyHint: true }
     },
-    /*{
+    {
         name: "login_with_api_key",
         description: login_with_api_key_title,
         inputSchema: jsonSchema(zodToJsonSchema(z.object(AuthInput))).jsonSchema,
@@ -75,7 +69,13 @@ const tools: Tool[] = [
         description: get_wallet_history_title,
         inputSchema: jsonSchema(zodToJsonSchema(z.object(getWalletHistoryShape))).jsonSchema,
         annotations: { title: get_wallet_history_title, readOnlyHint: true }
-    },*/
+    },
+    {
+        name: "pay_and_get_402_protected_url",
+        description: auth402_title,
+        inputSchema: jsonSchema(zodToJsonSchema(z.object(get402clientShape))).jsonSchema,
+        annotations: { title: 'Pay 402 link', destructiveHint: true, openWorldHint: true }
+    }
 ];
 
 

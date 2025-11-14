@@ -1,5 +1,3 @@
-
-
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
 import { BASE } from '../support/http.js';
@@ -27,8 +25,8 @@ export async function pay_and_get_402_protected_url(args: any) {
     var result = JSON.parse(dat);
     return result;
 }
-export const auth402_title = "Pay a HTTP 402 protected URL";
-export const auth402_desc = "Pay a HTTP 402 protected URL using your P-Link managed account, and gets the result";
+export const auth402_title = "Pay a HTTP 402 protected URL using your P-Link managed account, and returns the result";
+
 export const get402clientShape = {
         url: z.string().describe("The 402 protected URL")
     } ;
@@ -39,9 +37,9 @@ export function register402client(server: McpServer ) {
         'pay_and_get_402_protected_url',
         {
             title: auth402_title,
-            description: auth402_desc,
+            description: auth402_title,
             inputSchema: get402clientShape,
-            annotations: { title: 'Pay 402 link', destructiveHint: true, openWorldHint: true }
+            annotations: { title: auth402_title, destructiveHint: true, openWorldHint: true }
         },
         async ({ url }) => {
             const r = pay_and_get_402_protected_url({ url });
