@@ -1,55 +1,22 @@
-# ---------- Build stage ----------
-FROM node:18-alpine AS builder
+FROM node:18-alpine
 
-# Optimisations réseau / build
-ENV NODE_ENV=development \
-    CI=true
-
+# Set working directory
 WORKDIR /app
 
-# Copie sélective pour profiter du cache Docker
-COPY package.json package-lock.json* ./
-COPY tsconfig.json ./
+# Copy package files
+COPY package*.json ./
 
-# Installe TOUTES les deps (prod + dev) pour pouvoir builder
-RUN npm ci
+# Install dependencies
+RUN npm ci --only=production
 
-# Copie du code
+# Copy source code
 COPY . .
 
-# Build TypeScript -> build/
-RUN npm run build
+# Build the application
+RUN npm run buildold
 
-# ---------- Runtime stage ----------
-FROM node:18-alpine AS runtime
+# Expose port (if needed for HTTP transport)
+EXPOSE 3000
 
-ENV NODE_ENV=production \
-    # Langue par défaut (peut être "fr" ou "en")
-    MCP_LANG=fr \
-    # Port exposé par l'app (src/index.ts -> 8787 si non défini)
-    PORT=8787
-
-WORKDIR /app
-
-# On ne copie que le strict nécessaire pour la prod
-COPY package.json package-lock.json* ./
-RUN npm ci --omit=dev
-
-# Copie des artefacts buildés + fichiers utiles (manifest, locales…)
-#COPY --from=builder /app/build ./build
-#COPY --from=builder /app/manifest.*.json /app/manifest.template.json ./
-#COPY --from=builder /app/locales ./locales
-#COPY --from=builder /app/scripts ./scripts
-
-# (Optionnel) Générer le manifest final au démarrage
-# RUN npm run generate:manifest
-
-EXPOSE 8787
-
-# Lancement en mode stdio (endpoint /mcp)
-# Équivalent à: npm run start:stdio ; could also be start:http if redis server present
-#CMD ["node", "build/stdio.js", "--stdio"]
-
-# Lancement en mode HTTP (endpoint /mcp)
-# Équivalent à: npm run start:stdio ; could also be start:http if redis server present
-CMD ["node", "build/index.js", "--http"]
+# Start the application
+CMD ["node", "dist/solution.js"]

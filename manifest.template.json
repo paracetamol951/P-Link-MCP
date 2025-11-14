@@ -1,7 +1,7 @@
 {
   "name": "P-Link.io MCP Server",
   "version": "0.0.1",
-  "description": "Exposes P-Link.io API as MCP tools, enabling programmatic access to sending money, requesting payment, creating payment links, get wallet balance or see transaction history.",
+  "description": "Send and receive money on Solana, converts any email or phone number into a wallet, requesting payment (creating x402 compliant payment links, payment pages for humans and bots), get wallet balance or see transaction history.",
   "endpoints": [
     {
       "type": "http",

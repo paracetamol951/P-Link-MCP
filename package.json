@@ -4,12 +4,13 @@
   "description": "MCP server exposing P-Link.io API as tools",
   "author": "Net-assembly",
   "type": "module",
-  "module": "./src/smithery.ts",
+  "main": "dist/solution.js",
+  "module": "./src/solution.ts",
   "scripts": {
-    "dev": "smithery dev",
-    "build": "smithery build",
-    "devold": "tsx watch src/index.ts",
-    "buildold": "tsc -p tsconfig.json",
+    "smithdev": "smithery dev",
+    "smithbuild": "smithery build",
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc -p tsconfig.json",
     "start": "node build/stdio.js",
     "start:stdio": "node build/stdio.js",
     "start:http": "node build/index.js --http",
@@ -34,9 +35,11 @@
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.2.0",
     "@smithery/sdk": "^1.7.4",
+    "ai": "^5.0.93",
     "dotenv": "^16.4.5",
     "jose": "^6.1.0",
-    "zod": "^3.25.46"
+    "zod": "^3.25.46",
+    "zod-to-json-schema": "^3.24.6"
   },
   "optionalDependencies": {
     "express": "^4.19.2",

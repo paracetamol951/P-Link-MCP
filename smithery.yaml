@@ -1,18 +1,58 @@
-runtime: container
+name: plink-mcp-server    
+description: "Send and receive money on Solana, converts any email or phone number into a wallet, requesting payment (creating x402 compliant payment links, payment pages for humans and bots), get wallet balance or see transaction history on Solana Blockchain."
+version: 0.0.3
+author: "NetAssembly"
+license: MIT
+runtime: "typescript"
+remote: true
+
+# Build configuration
 build:
-  dockerfile: "Dockerfile"
-  dockerBuildPath: "."
+  type: docker
+  dockerfile: Dockerfile
+
 startCommand:
-  type: "http"
-  configSchema:
-    type: object
-    required: []
-    properties:
-      apiKey:
-        type: string
-        title: "API Key"
-        description: "API key for P-Link.io"
-env:
-  NODE_ENV: "production"
-  DEBUG: "true"
-  LOG_LEVEL: "info"
+  type: stdio
+  configSchema: {}
+  commandFunction: |
+    (config) => {
+      return {
+        command: "node",
+        args: ["dist/smithery.js"],
+        env: {}
+      };
+    }
+
+# Capabilities
+capabilities:
+  tools: 15
+  transport: ["stdio"]
+
+# Categories
+categories:
+  - blockchain
+  - solana
+  - defi
+  - wallet-management
+  - development-tools
+
+# Keywords
+keywords:
+  - solana
+  - blockchain
+  - wallet
+  - defi
+  - web3
+  - smart-contracts
+  - spl-tokens
+  - anchor
+
+# Environment
+environment:
+  node: ">=18.0.0"
+
+# Dependencies
+dependencies:
+  npm: []
+  global: []
+  system: []
