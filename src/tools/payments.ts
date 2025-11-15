@@ -139,8 +139,7 @@ export async function get_my_wallet_info(reqBody: any) {
         result = { ...result, ...walletBalance };
         return result;
     }
-    throw Error("Not found");
-    //return result;
+    throw Error("Invalid API_KEY");
 }
 export async function get_transaction_state(args: any) {
     const { trxID } = args;
