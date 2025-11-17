@@ -22,7 +22,7 @@ import { serverJsonInfos } from './support/mcp.js';
 const tools: Tool[] = [
 
     {
-        name: "get_wallet_and_api_key",
+        name: "get_wallet_and_OTP",
         description: get_wallet_and_api_key_title,
         inputSchema: jsonSchema(zodToJsonSchema(z.object(CreateAccountInput))).jsonSchema,
         annotations: { title: get_wallet_and_api_key_title, readOnlyHint: true }
@@ -114,10 +114,9 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
         switch (name) {
 
-            case "get_wallet_and_api_key":
+            case "get_wallet_and_OTP":
                 result = await get_wallet_and_api_key(args);
                 break;
-            case "login_with_api_key":
             case "login_with_OTP":
                 result = await login_with_api_key(args);
                 break;

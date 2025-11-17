@@ -120,7 +120,7 @@ export async function fund_my_wallet(args: any) {
 export function registerAuthTool(server: McpServer) {
 
     server.registerTool(
-        'get_wallet_and_api_key',
+        'get_wallet_and_OTP',
         {
             title: get_wallet_and_api_key_title,
             description: get_wallet_and_api_key_title,

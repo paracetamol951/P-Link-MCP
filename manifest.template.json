@@ -42,7 +42,7 @@
     },
     {
       "name": "login_with_OTP",
-      "description": "Login using API_KEY"
+      "description": "Login using OTP"
     },
     {
       "name": "fund_my_wallet",

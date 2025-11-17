@@ -37,8 +37,8 @@
   },
   "tools": [
     {
-      "name": "get_wallet_and_api_key",
-      "description": "Create wallet for this email and get API_KEY"
+      "name": "get_wallet_and_OTP",
+      "description": "Create wallet for this email and get OTP"
     },
     {
       "name": "login_with_OTP",
