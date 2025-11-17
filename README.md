@@ -36,8 +36,8 @@ This project exposes the **p-link.io** API as **Model Context Protocol (MCP)** t
 - **get_wallet_info** : Get information about your wallet (balance, public address, etc)
 - **get_wallet_history** : Retrieve list of the transactions related to my Solana wallet
 - **pay_and_get_402_protected_url** : Pay a HTTP 402 protected URL, and returns the protected result. The assistant will use your wallet in order to pay for the requested ressource.
-- **get_wallet_and_api_key** : Create wallet for this email and get API_KEY
-- **login_with_api_key** : Login using API_KEY
+- **get_wallet_and_api_key** : Create wallet for this email and get OTP
+- **login_with_OTP** : Login using OTP
 - **fund_my_wallet** : Get the different ways in order to fund your wallet : Sending Solana cryptocurrency to the specified Solana public wallet address, or use a the provided link in order to fund your account using a credit card (provided by Stripe).
 
 ---

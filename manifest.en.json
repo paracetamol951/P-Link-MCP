@@ -41,8 +41,8 @@
       "description": "Create wallet for this email and get API_KEY"
     },
     {
-      "name": "login_with_api_key",
-      "description": "Login using API_KEY"
+      "name": "login_with_OTP",
+      "description": "Login using OTP (one time password)"
     },
     {
       "name": "fund_my_wallet",
