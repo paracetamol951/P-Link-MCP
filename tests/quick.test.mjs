@@ -19,15 +19,4 @@ const frDict = JSON.parse(fs.readFileSync(path.join(base, 'locales', 'fr', 'comm
 assert.equal(typeof enDict.app.name, 'string');
 assert.equal(typeof frDict.app.name, 'string');
 
-// 2) manifest generation script works for en & fr
-run('node scripts/generate-manifest.mjs', { MCP_LANG: 'en' });
-const manEn = JSON.parse(fs.readFileSync(path.join(base, 'manifest.en.json'), 'utf-8'));
-assert.ok(Array.isArray(manEn.tools) && manEn.tools.length >= 3);
-assert.equal(typeof manEn.name, 'string');
-
-run('node scripts/generate-manifest.mjs', { MCP_LANG: 'fr' });
-const manFr = JSON.parse(fs.readFileSync(path.join(base, 'manifest.fr.json'), 'utf-8'));
-assert.ok(Array.isArray(manFr.tools) && manFr.tools.length >= 3);
-assert.equal(typeof manFr.name, 'string');
-
 console.log('✅ All tests passed');

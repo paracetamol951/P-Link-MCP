@@ -37,16 +37,16 @@
   },
   "tools": [
     {
-      "name": "get_wallet_and_api_key",
-      "description": "Create wallet for this email and get API_KEY"
+      "name": "get_wallet_and_OTP",
+      "description": "Create a wallet for your email or get OTP by email"
     },
     {
       "name": "login_with_OTP",
-      "description": "Login using OTP"
+      "description": "Login using OTP. Connect to your P-Link wallet using the one time password you received by email"
     },
     {
       "name": "fund_my_wallet",
-      "description": "Get the different ways in order to fund your wallet"
+      "description": "Fund wallet : Obtain a link in order to fund your wallet of the desired amount using a credit card, or the Solana address of your wallet if you want to fund your account using Solana."
     },
     {
       "name": "get_private_key_of_wallet",
@@ -54,15 +54,15 @@
     },
     {
       "name": "send_money",
-      "description": "Send money to an email, Solana wallet or phone number."
+      "description": "Send money to an email, Solana wallet or phone number. The provided email or phone can be used to claim the money of the wallet. If new user does not claim for 3 days, the money is returned to the sender."
     },
     {
       "name": "request_payment_link",
-      "description": "Create a payment link in order to request a payment to your account"
+      "description": "Create a payment link in order to request a payment to your account. This payment link can be used to pay you. Payment can be made using a credit card, or any Solana token (automatically converted to USDC)"
     },
     {
       "name": "get_wallet_info",
-      "description": "Retrieve the wallet infos about the connected P-Link account (Solana wallet address, Balance)"
+      "description": "Retrieve the wallet infos about the connected P-Link account (Solana wallet address, wallet balance, tokens detail)"
     },
     {
       "name": "get_transaction_state",
@@ -70,7 +70,7 @@
     },
     {
       "name": "get_wallet_history",
-      "description": "Retrieve list of the transactions related to my Solana wallet"
+      "description": "Transaction history : Retrieve list of the transactions related to the specified Solana wallet address (received and sent funds with dates)"
     },
     {
       "name": "pay_and_get_402_protected_url",

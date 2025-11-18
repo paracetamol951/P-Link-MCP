@@ -188,7 +188,7 @@ export async function get_wallet_history(args: any) {
 }
 
 export const send_money_title = "Send money to an email, Solana wallet or phone number. The provided email or phone can be used to claim the money of the wallet. If new user does not claim for 3 days, the money is returned to the sender.";
-export const request_payment_link_title = "Create a payment link in order to request a payment to your account. This payment link can be used to pay you. Payment can be made using a credit card, or any Solana token (";
+export const request_payment_link_title = "Create a payment link in order to request a payment to your account. This payment link can be used to pay you. Payment can be made using a credit card, or any Solana token (automatically converted to USDC)";
 export const get_my_wallet_info_title = "Retrieve the wallet infos about the connected P-Link account (Solana wallet address, wallet balance, tokens detail)";
 export const get_transaction_state_title = "Retrieve the state and details of a transaction using Solana trx ID";
 export const get_wallet_history_title = "Transaction history : Retrieve list of the transactions related to the specified Solana wallet address (received and sent funds with dates)";

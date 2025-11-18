@@ -27,7 +27,7 @@ export const GetPKInput = {
 
 export const get_PK_title = 'Get the private key of your wallet on secured app https://p-link.io';
 export const get_wallet_and_api_key_title = 'Create a wallet for your email or get OTP by email';
-export const login_with_OTP_title = 'Login using OTP. Connect to your P-Link wallet using OTP';
+export const login_with_OTP_title = 'Login using OTP. Connect to your P-Link wallet using the one time password you received by email';
 export const fund_my_wallet_title = 'Fund wallet : Obtain a link in order to fund your wallet of the desired amount using a credit card, or the Solana address of your wallet if you want to fund your account using Solana.';
 
 export async function get_PK(args: any) {
