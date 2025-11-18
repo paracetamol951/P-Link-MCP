@@ -13,14 +13,14 @@ export const AuthInput = {
     API_KEY: z.string().describe("API_KEY in order to access your account. You can receive your temporary API_KEY by email or get it on https://p-link.io"),
 } ;
 export const OTPInput = {
-    API_KEY: z.string().describe("OTP in order to access your account. You can receive your one time password by email or get it on https://p-link.io"),
+    OTP: z.string().describe("OTP in order to access your account. You can receive your one time password by email or get it on https://p-link.io"),
 } ;
 export const getFundWalletShape = {
     amount: z.number().positive().default(10).optional().describe("Amount to fund in your wallet in USD"),
 };
 
 export const get_wallet_and_api_key_title = 'Create a wallet for your email or get OTP by email for existing wallet.';
-export const login_with_api_key_title = 'Login using OTP. Connect to your P-Link wallet using OTP';
+export const login_with_OTP_title = 'Login using OTP. Connect to your P-Link wallet using OTP';
 export const fund_my_wallet_title = 'Fund wallet : Obtain a link in order to fund your wallet of the desired amount using a credit card, or the Solana address of your wallet if you want to fund your account using Solana.';
 
 export async function get_wallet_and_api_key(args: any)  {
@@ -60,23 +60,38 @@ export async function get_wallet_and_api_key(args: any)  {
     }
     return resF;
 }
-export async function login_with_api_key(args: any) {
-    const { API_KEY } = args;
+export async function login_with_OTP(args: any) {
+    const { OTP } = args;
 
-    var data = await getAPIuser(API_KEY);
+    var jsP = {
+        myKey: OTP
+    }
+    const fet = await fetch(BASE + '/api/consumeOTP', {
+        method: 'POST',
+        headers: {
+            Accept: 'application.json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(jsP)
+    });
+    var dat = await fet.text();
+    process.stderr.write(`[caisse][info] APIuser ${dat}\n`);
 
-    if (typeof data === 'object' && data && 'pubk' in data) {
+    var data = JSON.parse(dat);
+    //var data = await getAPIuser(API_KEY);
+
+    if (typeof data === 'object' && data && 'API_KEY' in data && 'pubk' in data) {
         setSessionAuth({
             ok: true,
-            APIKEY: API_KEY,
+            APIKEY: data.API_KEY,
             scopes: ['*'],
         });
-
+        return { result: 'Login successfull, OTP consumed', publicSolanaWalletAddress: data.pubk }
         //ctx.auth = getSessionAuth();
     } else {
+        throw new Error("OTP incorrect");
         console.error('Erreur API:', data);
     }
-    if (data?.pk) delete data.pk;
     return data;
 }
 export async function fund_my_wallet(args: any) {
@@ -132,12 +147,12 @@ export function registerAuthTool(server: McpServer) {
     server.registerTool(
         'login_with_OTP',
         {
-            title: login_with_api_key_title,
-            description: login_with_api_key_title,
+            title: login_with_OTP_title,
+            description: login_with_OTP_title,
             inputSchema: OTPInput, // shape
-            annotations: { title: login_with_api_key_title, readOnlyHint: true }
+            annotations: { title: login_with_OTP_title, readOnlyHint: true }
         },
-        async (e) => await wrapResult(login_with_api_key, e)
+        async (e) => await wrapResult(login_with_OTP, e)
     );
     server.registerTool(
         'fund_my_wallet',

@@ -14,7 +14,7 @@ import { z } from "zod";
 import { auth402_title, pay_and_get_402_protected_url, get402clientShape } from "./tools/402client.js";
 
 import { zodToJsonSchema } from "zod-to-json-schema";
-import { get_wallet_and_api_key_title, CreateAccountInput, login_with_api_key, OTPInput, login_with_api_key_title, fund_my_wallet, fund_my_wallet_title, get_wallet_and_api_key, getFundWalletShape } from './tools/auth.js';
+import { get_wallet_and_api_key_title, CreateAccountInput, login_with_OTP, OTPInput, login_with_OTP_title, fund_my_wallet, fund_my_wallet_title, get_wallet_and_api_key, getFundWalletShape } from './tools/auth.js';
 import { send_money, getSendMoneyShape, send_money_title, request_payment_link, getCreatePLinkShape, request_payment_link_title, get_my_wallet_info, get_my_wallet_info_title, get_transaction_state, getGetTrxStateShape, get_transaction_state_title, get_wallet_history, getWalletHistoryShape, get_wallet_history_title, getGetWalletInfosShape } from './tools/payments.js';
 import { serverJsonInfos } from './support/mcp.js';
 
@@ -29,9 +29,9 @@ const tools: Tool[] = [
     },
     {
         name: "login_with_OTP",
-        description: login_with_api_key_title,
+        description: login_with_OTP_title,
         inputSchema: jsonSchema(zodToJsonSchema(z.object(OTPInput))).jsonSchema,
-        annotations: { title: login_with_api_key_title, readOnlyHint: true }
+        annotations: { title: login_with_OTP_title, readOnlyHint: true }
     },
     {
         name: "fund_my_wallet",
@@ -118,7 +118,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
                 result = await get_wallet_and_api_key(args);
                 break;
             case "login_with_OTP":
-                result = await login_with_api_key(args);
+                result = await login_with_OTP(args);
                 break;
             case "fund_my_wallet":
                 result = await fund_my_wallet(args);
