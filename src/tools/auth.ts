@@ -8,15 +8,15 @@ import { getAPIuser, structData, wrapResult } from '../support/toolsData.js';
 import { solAddressZod } from './payments.js';
 
 export const CreateAccountInput = {
-    email: z.string().email().describe("Email that will be associated with the wallet. This email can claim the funds on the wallet."),
+    email: z.string().email().describe("Email that will be associated with the wallet. This email can claim the funds on the wallet.")
 };
 export const AuthInput = {
-    API_KEY: z.string().describe("API_KEY in order to access your account. You can receive your temporary API_KEY by email or get it on https://p-link.io"),
+    API_KEY: z.string().describe("API_KEY in order to access your account. You can receive your temporary API_KEY by email or get it on https://p-link.io")
 } ;
 export const OTPInput = {
     email: z.string().email().describe("Email of your account."),
-    OTP: z.string().describe("OTP in order to access your account. You can receive your one time password by email usgin this MCP server tools or get it on https://p-link.io"),
-} ;
+    OTP: z.string().describe("OTP in order to access your account. You can receive your one time password by email usgin this MCP server tools or get it on https://p-link.io")
+};
 export const getFundWalletShape = {
     amount: z.number().positive().default(10).optional().describe("Amount to fund in your wallet in USD"),
 };
