@@ -5,7 +5,7 @@ import { currencyZOD, getAPIuser,  structData, wrapResult } from '../support/too
 import { BASE } from '../support/http.js';
 const emailZod = z.string().email();
 const phoneZod = z.string().regex(/^\+?[0-9]{6,15}$/, "Invalid phone number").describe("Phone number (00XX format)");
-const solAddressZod = z.string().regex(/^[1-9A-HJ-NP-Za-km-z]{32,44}$/, "Invalid Solana address").describe("Solana wallet address");
+export const solAddressZod = z.string().regex(/^[1-9A-HJ-NP-Za-km-z]{32,44}$/, "Invalid Solana address").describe("Solana wallet address");
 const recipientZod = z.union([emailZod, phoneZod, solAddressZod]).describe(
     "Email, phone number or wallet address"
 );

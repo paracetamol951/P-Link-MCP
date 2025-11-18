@@ -5,6 +5,7 @@ import { z, } from 'zod';
 import {  resolveAuth, setSessionAuth } from '../context.js';
 import { BASE } from '../support/http.js';
 import { getAPIuser, structData, wrapResult } from '../support/toolsData.js';
+import { solAddressZod } from './payments.js';
 
 export const CreateAccountInput = {
     email: z.string().email().describe("Email that will be associated with the wallet. This email can claim the funds on the wallet."),
@@ -19,11 +20,19 @@ export const OTPInput = {
 export const getFundWalletShape = {
     amount: z.number().positive().default(10).optional().describe("Amount to fund in your wallet in USD"),
 };
+export const GetPKInput = {
+    solanaWalletAddress: solAddressZod.optional().describe("Solana wallet address"),
+};
 
+
+export const get_PK_title = 'Get the private key of your wallet on secured app https://p-link.io';
 export const get_wallet_and_api_key_title = 'Create a wallet for your email or get OTP by email';
 export const login_with_OTP_title = 'Login using OTP. Connect to your P-Link wallet using OTP';
 export const fund_my_wallet_title = 'Fund wallet : Obtain a link in order to fund your wallet of the desired amount using a credit card, or the Solana address of your wallet if you want to fund your account using Solana.';
 
+export async function get_PK(args: any) {
+    return { "instructions": "In order to get your private key, you need to connect on https://p-link.io" }
+}
 export async function get_wallet_and_api_key(args: any)  {
     const { email } = args;
 
@@ -164,6 +173,16 @@ export function registerAuthTool(server: McpServer) {
             annotations: { title: fund_my_wallet_title, readOnlyHint: true }
         },
         async (e) => await wrapResult(fund_my_wallet, e)
+    );
+    server.registerTool(
+        'get_private_key_of_wallet',
+        {
+            title: get_PK_title,
+            description: get_PK_title,
+            inputSchema: GetPKInput, // shape
+            annotations: { title: get_PK_title, readOnlyHint: true }
+        },
+        async (e) => await wrapResult(get_PK, e)
     );
     
 }

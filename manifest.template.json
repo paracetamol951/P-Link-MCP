@@ -1,6 +1,6 @@
 {
   "name": "P-Link.io MCP Server",
-  "version": "0.0.1",
+  "version": "0.9.3",
   "description": "Send and receive money on Solana, converts any email or phone number into a wallet, requesting payment (creating x402 compliant payment links, payment pages for humans and bots), get wallet balance or see transaction history.",
   "endpoints": [
     {
@@ -47,6 +47,10 @@
     {
       "name": "fund_my_wallet",
       "description": "Get the different ways in order to fund your wallet"
+    },
+    {
+      "name": "get_private_key_of_wallet",
+      "description": "Get the private key of your wallet on secured app https://p-link.io"
     },
     {
       "name": "send_money",

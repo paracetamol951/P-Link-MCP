@@ -39,6 +39,7 @@ This project exposes the **p-link.io** API as **Model Context Protocol (MCP)** t
 - **get_wallet_and_OTP** : Create wallet for this email and get OTP
 - **login_with_OTP** : Login using OTP
 - **fund_my_wallet** : Get the different ways in order to fund your wallet : Sending Solana cryptocurrency to the specified Solana public wallet address, or use a the provided link in order to fund your account using a credit card (provided by Stripe).
+- **get_private_key_of_wallet** : Get the private key of your wallet. First call this tool with no OTP and the server will send you an OPT to provide to this tool.
 
 ---
 
