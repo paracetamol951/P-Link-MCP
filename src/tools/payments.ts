@@ -152,7 +152,34 @@ export async function get_transaction_state(args: any) {
 }
 export async function get_wallet_history(args: any) {
     const { walletAddress } = args;
-    const fet = await fetch(BASE + '/api/walletHistory/' + walletAddress + '/' + new Date().getTime());
+
+    var pubk = '';
+    var result = { error: 'Not found' } as any
+    if (walletAddress) {
+        pubk = walletAddress;
+    } else {
+        const { apiKey } = resolveAuth(undefined, undefined);
+        var jsP = {
+            myKey: apiKey
+        }
+        const fet = await fetch(BASE + '/api/getAPIUser', {
+            method: 'POST',
+            headers: {
+                Accept: 'application.json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(jsP)
+        });
+        var dat = await fet.text();
+
+
+        result = JSON.parse(dat);
+
+        pubk = result.pubk;
+    }
+    if (!pubk) throw new Error("User not found, please provide a Solana public wallet address");
+
+    const fet = await fetch(BASE + '/api/walletHistory/' + pubk + '/' + new Date().getTime());
     var dat = await fet.text();
     process.stderr.write(`[caisse][info] dat2 ${dat}\n`);
 
