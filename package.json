@@ -1,6 +1,6 @@
 {
   "name": "plink-mcp-server",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "MCP server exposing P-Link.io API as tools",
   "author": "Net-assembly",
   "type": "module",
