@@ -13,13 +13,14 @@ export const AuthInput = {
     API_KEY: z.string().describe("API_KEY in order to access your account. You can receive your temporary API_KEY by email or get it on https://p-link.io"),
 } ;
 export const OTPInput = {
-    OTP: z.string().describe("OTP in order to access your account. You can receive your one time password by email or get it on https://p-link.io"),
+    email: z.string().email().describe("Email of your account."),
+    OTP: z.string().describe("OTP in order to access your account. You can receive your one time password by email usgin this MCP server tools or get it on https://p-link.io"),
 } ;
 export const getFundWalletShape = {
     amount: z.number().positive().default(10).optional().describe("Amount to fund in your wallet in USD"),
 };
 
-export const get_wallet_and_api_key_title = 'Create a wallet for your email or get OTP by email for existing wallet.';
+export const get_wallet_and_api_key_title = 'Create a wallet for your email or get OTP by email';
 export const login_with_OTP_title = 'Login using OTP. Connect to your P-Link wallet using OTP';
 export const fund_my_wallet_title = 'Fund wallet : Obtain a link in order to fund your wallet of the desired amount using a credit card, or the Solana address of your wallet if you want to fund your account using Solana.';
 
@@ -61,10 +62,10 @@ export async function get_wallet_and_api_key(args: any)  {
     return resF;
 }
 export async function login_with_OTP(args: any) {
-    const { OTP } = args;
+    const { OTP, email } = args;
 
     var jsP = {
-        myKey: OTP
+        OTP,email
     }
     const fet = await fetch(BASE + '/api/consumeOTP', {
         method: 'POST',
