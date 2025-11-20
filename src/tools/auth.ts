@@ -13,9 +13,9 @@ export const CreateAccountInput = {
 export const AuthInput = {
     API_KEY: z.string().describe("API_KEY in order to access your account. You can receive your temporary API_KEY by email or get it on https://p-link.io")
 } ;
-export const OTPInput = {
+export const otpInput = {
     email: z.string().email().describe("Email of your account."),
-    OTP: z.string().describe("OTP in order to access your account. You can receive your one time password by email usgin this MCP server tools or get it on https://p-link.io")
+    otp: z.string().describe("otp in order to access your account. You can receive your one time password by email usgin this MCP server tools or get it on https://p-link.io")
 };
 export const getFundWalletShape = {
     amount: z.number().positive().default(10).optional().describe("Amount to fund in your wallet in USD"),
@@ -26,8 +26,8 @@ export const GetPKInput = {
 
 
 export const get_PK_title = 'Get the private key of your wallet on secured app https://p-link.io';
-export const get_wallet_and_api_key_title = 'Create a wallet for your email or get OTP by email';
-export const login_with_OTP_title = 'Login using OTP. Connect to your P-Link wallet using the one time password you received by email';
+export const get_wallet_and_api_key_title = 'Create a wallet for your email or get otp by email';
+export const login_with_otp_title = 'Login using otp. Connect to your P-Link wallet using the one time password you received by email';
 export const fund_my_wallet_title = 'Fund wallet : Obtain a link in order to fund your wallet of the desired amount using a credit card, or the Solana address of your wallet if you want to fund your account using Solana.';
 
 export async function get_PK(args: any) {
@@ -70,13 +70,13 @@ export async function get_wallet_and_api_key(args: any)  {
     }
     return resF;
 }
-export async function login_with_OTP(args: any) {
-    const { OTP, email } = args;
+export async function login_with_otp(args: any) {
+    const { otp, email } = args;
 
     var jsP = {
-        OTP,email
+        otp,email
     }
-    const fet = await fetch(BASE + '/api/consumeOTP', {
+    const fet = await fetch(BASE + '/api/consumeotp', {
         method: 'POST',
         headers: {
             Accept: 'application.json',
@@ -96,10 +96,10 @@ export async function login_with_OTP(args: any) {
             APIKEY: data.API_KEY,
             scopes: ['*'],
         });
-        return { result: 'Login successfull, OTP consumed', publicSolanaWalletAddress: data.pubk }
+        return { result: 'Login successfull, otp consumed', publicSolanaWalletAddress: data.pubk }
         //ctx.auth = getSessionAuth();
     } else {
-        throw new Error("OTP incorrect");
+        throw new Error("otp incorrect");
         console.error('Erreur API:', data);
     }
     return data;
@@ -120,6 +120,8 @@ export async function fund_my_wallet(args: any) {
             myCookie: apiKey,
             pubk: data.pubk
         }
+        process.stderr.write(`[caisse][info] fund_my_wallet \n` + JSON.stringify( callParams ) );
+
         const response = await fetch(
             BASE + "/api/create-onramp-session",
             {
@@ -145,7 +147,7 @@ export async function fund_my_wallet(args: any) {
 export function registerAuthTool(server: McpServer) {
 
     server.registerTool(
-        'get_wallet_and_OTP',
+        'get_wallet_and_otp',
         {
             title: get_wallet_and_api_key_title,
             description: get_wallet_and_api_key_title,
@@ -155,14 +157,14 @@ export function registerAuthTool(server: McpServer) {
         async (e) => await wrapResult(get_wallet_and_api_key, e)
     );
     server.registerTool(
-        'login_with_OTP',
+        'login_with_otp',
         {
-            title: login_with_OTP_title,
-            description: login_with_OTP_title,
-            inputSchema: OTPInput, // shape
-            annotations: { title: login_with_OTP_title, readOnlyHint: true }
+            title: login_with_otp_title,
+            description: login_with_otp_title,
+            inputSchema: otpInput, // shape
+            annotations: { title: login_with_otp_title, readOnlyHint: true }
         },
-        async (e) => await wrapResult(login_with_OTP, e)
+        async (e) => await wrapResult(login_with_otp, e)
     );
     server.registerTool(
         'fund_my_wallet',

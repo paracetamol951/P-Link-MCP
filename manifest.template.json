@@ -37,12 +37,12 @@
   },
   "tools": [
     {
-      "name": "get_wallet_and_OTP",
-      "description": "Create a wallet for your email or get OTP by email"
+      "name": "get_wallet_and_otp",
+      "description": "Create a wallet for your email or get otp by email"
     },
     {
-      "name": "login_with_OTP",
-      "description": "Login using OTP. Connect to your P-Link wallet using the one time password you received by email"
+      "name": "login_with_otp",
+      "description": "Login using otp. Connect to your P-Link wallet using the one time password you received by email"
     },
     {
       "name": "fund_my_wallet",
