@@ -76,7 +76,7 @@ export async function login_with_otp(args: any) {
     var jsP = {
         otp,email
     }
-    const fet = await fetch(BASE + '/api/consumeotp', {
+    const fet = await fetch(BASE + '/api/consumeOTP', {
         method: 'POST',
         headers: {
             Accept: 'application.json',
