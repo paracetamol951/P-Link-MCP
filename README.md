@@ -18,7 +18,8 @@ It provides a simple interface to:
 
 
 > 🟢 Live Server: [https://mcp.p-link.io](https://mcp.p-link.io)
-> 🟢 Live Demo: [https://mcp.p-link.io](https://mcp.p-link.io)
+
+> 🟢 Live Demo: [https://smithery.ai/chat?mcp=@paracetamol951/p-link-mcp](https://smithery.ai/chat?mcp=@paracetamol951/p-link-mcp)
 
 [![P-Link MCP and 402](https://github.com/paracetamol951/P-Link-MCP/blob/main/doc/PresentationVideoThumb.jpg)](https://youtu.be/sw9ASYZHEzY)
 
