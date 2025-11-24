@@ -2,7 +2,6 @@
 
 [![smithery badge](https://smithery.ai/badge/@paracetamol951/p-link-mcp)](https://smithery.ai/server/@paracetamol951/p-link-mcp)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
-[![Live Demo](https://img.shields.io/badge/Demo-online-brightgreen.svg)](https://youtu.be/MTsc_nKiofw)
 [![Demo video](https://img.shields.io/badge/Demo-online-brightgreen.svg)](https://smithery.ai/chat?mcp=@paracetamol951/p-link-mcp)
 [![GitHub Stars](https://img.shields.io/github/stars/paracetamol951/P-Link-MCP?style=social)](https://github.com/paracetamol951/P-Link-MCP/stargazers)
 
