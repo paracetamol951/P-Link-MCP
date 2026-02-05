@@ -199,6 +199,6 @@ https://mcp.p-link.io/.well-known/mcp/manifest.json
 
 ## Links
 
-https://docs.p-link.io/automations
-https://medium.com/@P-Link.io/when-your-ai-assistant-can-finally-buy-things-for-you-da840da53e85
-https://p-link.io/documentation
+- https://docs.p-link.io/automations
+- https://medium.com/@P-Link.io/when-your-ai-assistant-can-finally-buy-things-for-you-da840da53e85
+- https://p-link.io/documentation
