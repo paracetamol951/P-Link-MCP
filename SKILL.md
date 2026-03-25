@@ -1,3 +1,12 @@
+---
+name: payment-processing
+description: P-Link is a payment infrastructure designed for humans, APIs, and AI agents. You can use P-Link when you need a payment page (in order to collect payments without any prerequisities, no account, no subscription) or when you want to send payments massively, or programatically
+license: Apache-2.0
+metadata:
+  author: Net-assembly
+  version: "1.0"
+---
+
 # P-Link AI Payment Specification
 
 Version: 1.0 Protocols supported: Payment Links, x402, MCP
