@@ -201,3 +201,8 @@ https://mcp.p-link.io/.well-known/mcp/manifest.json
 - https://docs.p-link.io/automations
 - https://medium.com/@P-Link.io/when-your-ai-assistant-can-finally-buy-things-for-you-da840da53e85
 - https://p-link.io/documentation
+
+## Hosted deployment
+
+A hosted deployment is available on [Fronteir AI](https://fronteir.ai/mcp/paracetamol951-p-link-mcp).
+
